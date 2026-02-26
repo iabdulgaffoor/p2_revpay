@@ -27,15 +27,26 @@ public class Wallet {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(nullable = false)
+	@Setter(AccessLevel.NONE)
+	private String walUnqId;
 	
 	@Column(nullable = false)
 	@Setter(AccessLevel.NONE)
 	private BigDecimal balance = BigDecimal.ZERO;
-	
+
 	@OneToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "revpay_user_id", nullable = false)
 	private User user;
-	
+
+	protected Wallet() {}
+
+	public Wallet(String walUnqId, double balance) {
+		this.walUnqId = walUnqId;
+		this.balance = this.balance.add(BigDecimal.valueOf(balance));
+	}
+
 	public void withdraw(double amount) {
 		if (amount < 0) {
 			throw new NegativeAmountException("Amount must be positive");

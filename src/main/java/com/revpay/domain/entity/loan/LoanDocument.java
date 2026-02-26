@@ -1,5 +1,6 @@
 package com.revpay.domain.entity.loan;
 
+import com.revpay.domain.enums.DocumentType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -26,7 +27,7 @@ public class LoanDocument {
 	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
-	private String documentType;
+	private DocumentType documentType;
 	
 	@Column(nullable = false)
 	private String documentPath;

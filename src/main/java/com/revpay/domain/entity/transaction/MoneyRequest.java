@@ -32,11 +32,11 @@ public class MoneyRequest extends BaseEntity {
 	private MoneyRequestStatus status = MoneyRequestStatus.PENDING;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "revpay_user_id", nullable = false)
+	@JoinColumn(name = "requester_id", nullable = false)
 	private User requester;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "revpay_user_id", nullable = false)
+	@JoinColumn(name = "receiver_id", nullable = false)
 	private User receiver;
 	
 }

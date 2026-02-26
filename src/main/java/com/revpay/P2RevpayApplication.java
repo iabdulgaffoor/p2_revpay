@@ -1,18 +1,14 @@
 package com.revpay;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class P2RevpayApplication implements CommandLineRunner {
+public class P2RevpayApplication {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(P2RevpayApplication.class, args);
 	}
-
-	@Override
-	public void run(String... args) throws Exception {
 
 		/*
 		 * role created saved
@@ -23,6 +19,4 @@ public class P2RevpayApplication implements CommandLineRunner {
 		 * now saving user
 		 * ABOVE IS OVERALL PROCESS
 		 */
-				
-	}
 }

@@ -37,11 +37,11 @@ public class Transaction extends BaseEntity {
 	private TransactionStatus status = TransactionStatus.PENDING;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "revpay_user_id", nullable = false)
+	@JoinColumn(name = "sender_id", nullable = false)
 	private User sender;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "revpay_user_id", nullable = false)
+	@JoinColumn(name = "receiver_id", nullable = false)
 	private User receiver;
 	
 }

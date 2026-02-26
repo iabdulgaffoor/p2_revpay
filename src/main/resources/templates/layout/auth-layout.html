@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"
+        xmlns:th="https://www.thymeleaf.org"
+        th:fragment="auth-layout(title, content)">
+    <head>
+        <meta charset="UTF-8">
+        <title th:replace="${title}"></title>
+    </head>
+    <body>
+        <main>
+            <div th:replace="~{../fragments/header :: header}"></div>
+            <div th:if="${content != null}" th:replace="${content}"></div>
+            <div th:replace="~{../fragments/footer :: footer}"></div>
+        </main>
+    </body>
+</html>

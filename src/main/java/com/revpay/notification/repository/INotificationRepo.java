@@ -10,8 +10,4 @@ import com.revpay.domain.entity.notification.Notification;
 @Repository
 public interface INotificationRepo extends JpaRepository<Notification, Long> {
 
-	List<Notification> findByType(String type);
-	
-	List<Notification> findByIsRead(Boolean isRead);
-	
 }

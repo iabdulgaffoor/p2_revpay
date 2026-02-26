@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="https://www.thymeleaf.org"
+      th:fragment="main-layout(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${title}}"></title>
+</head>
+<body>
+    <main>
+        <header th:replace="~{../fragments/header :: header}"></header>
+        <div th:if="${content != null}" th:replace="${content}"></div>
+        <footer th:replace="~{../fragments/footer :: footer}"></footer>
+    </main>
+</body>
+</html>

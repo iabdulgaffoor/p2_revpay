@@ -1,8 +1,7 @@
-package com.revpay.domain.entity.auth;
+package com.revpay.domain.entity.user;
 
 
 import com.revpay.domain.entity.BaseEntity;
-import com.revpay.domain.entity.user.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
