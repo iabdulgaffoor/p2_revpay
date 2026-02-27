@@ -1,29 +1,28 @@
 package com.revpay.common.util;
 
-import com.revpay.domain.entity.wallet.Wallet;
-import com.revpay.wallet.repository.IWalletRepo;
-import org.springframework.context.annotation.Configuration;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.Year;
-import java.util.Optional;
 
-@Configuration
+@Service
 public class WalletUtil {
 
-    private static IWalletRepo iWalletRepo;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public WalletUtil(IWalletRepo iWalletRepo) {
-        iWalletRepo = iWalletRepo;
+    public String unqIdGenerator() {
+
+        BigDecimal seqValue =
+                (BigDecimal) entityManager
+                        .createNativeQuery("SELECT revpay_wallet_unq_id_generator.NEXTVAL FROM dual")
+                        .getSingleResult();
+
+        String year = String.valueOf(Year.now().getValue());
+
+        return "REV" + year + String.format("%05d", seqValue.longValue());
     }
-
-    public static String unqIdGenerator(Wallet wallet) {
-        Wallet walletWithId = iWalletRepo.save(wallet);
-
-        String accountNumber = "REV" + Year.now().getValue()
-                + String.format("%05d", walletWithId.getId());
-
-        walletWithId.(accountNumber);
-        accountRepository.save(saved);
-    }
-
 }

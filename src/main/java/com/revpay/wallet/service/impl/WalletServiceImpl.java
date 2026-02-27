@@ -1,29 +1,27 @@
 package com.revpay.wallet.service.impl;
 
+import com.revpay.common.util.WalletUtil;
 import com.revpay.domain.entity.user.User;
 import com.revpay.domain.entity.wallet.Wallet;
 import com.revpay.wallet.repository.IWalletRepo;
 import com.revpay.wallet.service.IWalletService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class WalletServiceImpl implements IWalletService {
 
     private final IWalletRepo iWalletRepo;
-
-    public WalletServiceImpl(IWalletRepo iWalletRepo) {
-        this.iWalletRepo = iWalletRepo;
-    }
+    private final WalletUtil walletUtil;
 
     @Override
-    public User createWallet(User user) {
-
-        Optional<Wallet> wallet = iWalletRepo.save()
-
+    public User createWallet(User user, Double initialBalance) {
+        String walletUnqId = walletUtil.unqIdGenerator();
+        Wallet wallet = new Wallet(walletUnqId, initialBalance);
         user.addWallet(wallet);
-        return null;
+        iWalletRepo.save(wallet);
+        return user;
     }
-
 }

@@ -4,13 +4,13 @@
       th:fragment="main-layout(title, content)">
 <head>
     <meta charset="UTF-8">
-    <title th:replace="${title}}"></title>
+    <th:block th:replace="${title}"></th:block>
 </head>
 <body>
-    <main>
-        <header th:replace="~{../fragments/header :: header}"></header>
-        <div th:if="${content != null}" th:replace="${content}"></div>
-        <footer th:replace="~{../fragments/footer :: footer}"></footer>
-    </main>
+        <div th:replace="~{fragments/header :: header}"></div>
+        <main>
+            <th:block th:replace="${content}"></th:block>
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

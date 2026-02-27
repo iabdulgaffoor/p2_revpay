@@ -36,7 +36,7 @@ public class Wallet {
 	@Setter(AccessLevel.NONE)
 	private BigDecimal balance = BigDecimal.ZERO;
 
-	@OneToOne(fetch = FetchType.LAZY, optional = false)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "revpay_user_id", nullable = false)
 	private User user;
 

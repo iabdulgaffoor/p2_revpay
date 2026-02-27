@@ -1,5 +1,7 @@
 package com.revpay.common.exception.wallet;
 
+import java.io.Serial;
+
 public class InSufficientBalanceException extends RuntimeException {
 	
 	/**
@@ -7,7 +9,8 @@ public class InSufficientBalanceException extends RuntimeException {
 	 * serialVersionUID ensures version compatibility during serialization.
 	 * Without it, JVM generates one automatically which may cause InvalidClassException if the class changes.
 	 */
-	private static final long serialVersionUID = 1L;
+	@Serial
+    private static final long serialVersionUID = 1L;
 
 	public InSufficientBalanceException(String message) {
 		super(message);
