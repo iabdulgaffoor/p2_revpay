@@ -23,15 +23,4 @@ public class Role extends BaseEntity {
 	
 	@OneToMany(mappedBy = "role")
 	private List<UserRole> userRoles = new ArrayList<>();
-	
-	/*
-	 * to prevent outside object creation with null fields
-	 * to accessible for hibernate creating object through reflection-api
-	 */
-	protected Role() {}
-	
-	public Role(String name) {
-		this.name = name;
-	}
-	
 }

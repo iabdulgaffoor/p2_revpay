@@ -1,7 +1,6 @@
-package com.revpay.user.controller.page;
+package com.revpay.user.controller;
 
 import com.revpay.user.dto.CreateUserRequestDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -24,9 +24,9 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserProfileResponseDto registerUser(CreateUserRequestDto userDto) {
         User user = iUserMapper.toEntity(userDto);
-        Role role = iRoleSevice.getDefaultRole();
-        role = iRoleSevice.saveRole(role);
-        user.addRole(role);
+        //Role role = iRoleSevice.getRole();
+        //role = iRoleSevice.saveRole(role);
+        //user.addRole(role);
         user = iUserRepo.save(user);
         user = iWalletService.createWallet(user, 2000d);
         User savedUser = iUserRepo.save(user);

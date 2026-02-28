@@ -1,4 +1,4 @@
-package com.revpay.user.controller.rest;
+package com.revpay.user.controller;
 
 import com.revpay.user.dto.CreateUserRequestDto;
 import com.revpay.user.dto.UserProfileResponseDto;

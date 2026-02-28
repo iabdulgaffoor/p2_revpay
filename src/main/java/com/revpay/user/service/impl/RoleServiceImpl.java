@@ -14,20 +14,8 @@ public class RoleServiceImpl implements IRoleSevice {
 
     private final IRoleRepo iRoleRepo;
 
-    @Override
-    public Role getDefaultRole() {
-/*
-        return iRoleRepo
-                .findById(1L)
-                .orElseThrow(
-                        () -> new RoleNotFoundException("default role fetch failure")
-                );
-
- */
-        return new Role("USER_CLIENT");
-    }
-
-    public Role saveRole(Role role) {
+    public Role saveRole(Role role)
+    {
         return iRoleRepo.save(role);
     }
 }

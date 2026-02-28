@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en"
         xmlns:th="https://www.thymeleaf.org"
-        th:replace="~{dashboard-layout(title, content)}">
+        th:fragment="dashboard-layout(title, content)">
     <head>
         <meta charset="UTF-8">
-        <title th:replace="title"></title>
+        <th:block th:replace="${title}"></th:block>
     </head>
     <body>
+        <th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
         <main>
-            <header th:replace="~{fragments/header::header}"></header>
-            <div th:replace="content"></div>
-            <footer></footer>
+            <th:block th:replace="~{fragments/sidebar-admin :: sidebar}"></th:block>
+            <th:block th:replace="${content}"></th:block>
         </main>
     </body>
 </html>

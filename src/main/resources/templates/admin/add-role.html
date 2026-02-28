@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en"
+    xmlns:th="https://www.thymeleaf.org"
+    th:replace="~{layout/dashboard-layout :: dashboard-layout(~{::title}, ~{::content})}">
+<head>
+    <title>Add Role | admin panel | Revpay</title>
+</head>
+<body>
+    <section th:fragment="content">
+      <form th:object="${role}">
+          <h3>Add Role</h3>
+          <div>
+            <label for="role-name">Role Name:</label>
+            <input id="role-name" type="text" th:field="*{name}" />
+          </div>
+          <div>
+              <button type="submit" onclick="addRoleForm(event)">Add</button>
+          </div>
+      </form>
+      <script th:src="@{/js/role.js}"></script>
+    </section>
+</body>
+</html>
