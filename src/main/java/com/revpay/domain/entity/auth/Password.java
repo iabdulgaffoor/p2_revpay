@@ -22,8 +22,14 @@ public class Password extends BaseEntity {
 	@JoinColumn(name = "revpay_user_id", nullable = false)
 	private User user;
 	
-	public void changePassword(String passkey) {
+	public void addPassword(String passkey)
+	{
 		this.passkey = passkey;
+	}
+
+	public Password(String passkey, User user) {
+		this.passkey = passkey;
+		this.user = user;
 	}
 	
 }

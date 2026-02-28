@@ -3,7 +3,7 @@
 th:replace="~{layout/main-layout :: main-layout(~{::title}, ~{::content})}">
 
 <head>
-    <title>Register Personal User | RevPay</title>
+    <title>Register Personal User | Auth | RevPay</title>
 </head>
 <body>
     <div th:fragment="content">
@@ -54,7 +54,7 @@ th:replace="~{layout/main-layout :: main-layout(~{::title}, ~{::content})}">
             </div>
             <button type="submit" onclick="registerUser(event)">Register</button>
         </form>
-        <script th:src="@{/js/user.js}"></script>
+        <script th:src="@{/js/auth.js}"></script>
     </div>
 </body>
 </html>

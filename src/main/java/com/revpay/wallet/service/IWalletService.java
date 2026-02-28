@@ -4,6 +4,6 @@ import com.revpay.domain.entity.user.User;
 
 public interface IWalletService {
 
-    User createWallet(User user, Double initialBalance);
+    void createWallet(User user, Double initialBalance);
 
 }

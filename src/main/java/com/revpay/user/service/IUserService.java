@@ -6,6 +6,6 @@ import com.revpay.user.dto.UserProfileResponseDto;
 
 public interface IUserService {
 
-    UserProfileResponseDto registerUser(CreateUserRequestDto userDto);
+    User registerUser(CreateUserRequestDto userDto);
 
 }

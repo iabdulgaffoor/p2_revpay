@@ -13,17 +13,5 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserRestController {
 
-    private final IUserService iUserService;
 
-    @PostMapping("/register-personal")
-    public ResponseEntity<UserProfileResponseDto> registerUser(
-            @RequestBody CreateUserRequestDto createUserRequestDto
-    ) {
-        UserProfileResponseDto userProfileResponseDto =
-                iUserService.registerUser(createUserRequestDto);
-        return new ResponseEntity<>(
-                userProfileResponseDto,
-                HttpStatus.CREATED
-        );
-    }
 }

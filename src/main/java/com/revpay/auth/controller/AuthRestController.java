@@ -1,7 +1,7 @@
 package com.revpay.auth.controller;
 
-import com.revpay.auth.service.ISecurityQuestionService;
-import com.revpay.domain.entity.auth.SecurityQuestion;
+import com.revpay.user.dto.CreateUserRequestDto;
+import com.revpay.user.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,5 +12,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthRestController {
 
-    private final ISecurityQuestionService iSecurityQuestionService;
+    private final IUserService iUserService;
+
+    @PostMapping("/personal/save")
+    public ResponseEntity<String> registerUser(
+            @RequestBody CreateUserRequestDto createUserRequestDto
+    ) {
+        iUserService.registerUser(createUserRequestDto);
+        return new ResponseEntity<>(
+                "success",
+                HttpStatus.CREATED
+        );
+    }
 }

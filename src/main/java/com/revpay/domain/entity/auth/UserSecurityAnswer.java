@@ -34,5 +34,10 @@ public class UserSecurityAnswer {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "revpay_security_question_id", nullable = false)
 	private SecurityQuestion question;
-	
+
+	public UserSecurityAnswer(String answer, User user, SecurityQuestion question) {
+		this.user = user;
+		this.question = question;
+		this.answer = answer;
+	}
 }

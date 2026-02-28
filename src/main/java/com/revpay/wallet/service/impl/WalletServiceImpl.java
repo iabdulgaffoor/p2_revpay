@@ -17,11 +17,10 @@ public class WalletServiceImpl implements IWalletService {
     private final WalletUtil walletUtil;
 
     @Override
-    public User createWallet(User user, Double initialBalance) {
+    public void createWallet(User user, Double initialBalance) {
         String walletUnqId = walletUtil.unqIdGenerator();
         Wallet wallet = new Wallet(walletUnqId, initialBalance);
         user.addWallet(wallet);
         iWalletRepo.save(wallet);
-        return user;
     }
 }
