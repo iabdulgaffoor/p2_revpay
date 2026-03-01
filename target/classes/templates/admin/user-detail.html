@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="history-fragment">
+        <h4 th:text="'Activity Ledger for ' + ${targetUser.fullName}"></h4>
+        <div class="table-container notif-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>PARTY</th>
+                        <th>TYPE</th>
+                        <th>AMOUNT</th>
+                        <th>DATE</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="log : ${userActivity}">
+                        <td th:text="${log.id}">ID</td>
+                        <td th:text="${log.party}">Party</td>
+                        <td><span class="role-badge text-xs" th:text="${log.type}">TYPE</span></td>
+                        <td th:class="${log.isOutgoing ? 'negative' : 'positive'}"
+                            th:text="${log.isOutgoing ? '-$' + log.amount : '+$' + log.amount}">AMOUNT</td>
+                        <td th:text="${#temporals.format(log.date, 'yyyy-MM-dd HH:mm')}">DATE</td>
+                        <td>
+                            <span th:class="'status-pill status-' + ${#strings.toLowerCase(log.status)}"
+                                th:text="${log.status}">STATUS</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(userActivity)}">
+                        <td colspan="6" class="text-center-secondary-sm">No relevant activity
+                            found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
