@@ -2,7 +2,10 @@
 <html lang="en"
         xmlns:th="https://www.thymeleaf.org">
     <body>
-        <nav th:fragment="navbar">
+        <nav class="nav-container" th:fragment="navbar">
+            <h1 class="nav-logo">
+                <a th:href="@{/}">Revpay</a>
+            </h1>
             <ul>
                 <li>
                     <a th:href="@{/}">Revpay</a>

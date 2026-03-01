@@ -5,12 +5,13 @@
 <head>
     <meta charset="UTF-8">
     <th:block th:replace="${title}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/app.css}" type="text/css" />
 </head>
 <body>
-        <div th:replace="~{fragments/header :: header}"></div>
-        <main>
+        <th:block th:replace="~{fragments/header :: header}"></th:block>
+        <main class="main-content center">
             <th:block th:replace="${content}"></th:block>
         </main>
-        <div th:replace="~{fragments/footer :: footer}"></div>
+        <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>

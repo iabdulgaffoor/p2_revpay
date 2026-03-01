@@ -5,10 +5,11 @@
     <head>
         <meta charset="UTF-8">
         <th:block th:replace="${title}"></th:block>
+        <link rel="stylesheet" th:href="@{/css/app.css}" type="text/css" />
     </head>
     <body>
         <th:block th:replace="~{fragments/navbar :: navbar}"></th:block>
-        <main>
+        <main class="main-content center">
             <th:block th:replace="~{fragments/sidebar-admin :: sidebar}"></th:block>
             <th:block th:replace="${content}"></th:block>
         </main>

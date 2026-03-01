@@ -7,12 +7,15 @@
 </head>
 <body>
     <section th:fragment="content">
-        <form th:object="${securityQuestion}">
-            <div>
-                <label for="security-question">Security Question:</label>
-                <input id="security-question" type="text" th:field="*{question}" />
+        <form class="form-container" th:object="${securityQuestion}">
+            <div class="form-section-container">
+                <h2>Add Security Question</h2>
+                <div class="form-div">
+                    <label class="form-label" for="security-question">Security Question:</label>
+                    <input class="form-input" id="security-question" type="text" th:field="*{question}" />
+                </div>
             </div>
-            <button type="submit" onclick="addSecurityQuestion(event)">Add</button>
+            <button class="btn" type="submit" onclick="addSecurityQuestion(event)">Add</button>
         </form>
         <script th:src="@{/js/auth.js}"></script>
     </section>
