@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/layout :: headFragment('Credit Portfolio Registry | RevPay')}"></div>
+</head>
+
+<body>
+    <div th:replace="~{fragments/layout :: headerFragment}"></div>
+
+    <div class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px;">
+            <div>
+                <h1 style="font-weight: 600; font-size: 1.8rem; margin: 0;">Credit Portfolio Registry</h1>
+                <p style="color: var(--text-muted); font-size: 0.875rem;">Comprehensive oversight of active credit
+                    facilities and amortization schedules.</p>
+            </div>
+            <a href="/loan/apply" class="btn">Initialize Credit Request</a>
+        </div>
+
+        <div class="card"
+            style="padding: 0; overflow: hidden; border: 1px solid var(--border-color); box-shadow: none;">
+            <div id="loader" style="text-align:center; padding: 60px; color: var(--text-muted);">
+                <div style="font-size: 0.875rem;">Synchronizing credit records from registry...</div>
+            </div>
+
+            <div id="loanContainer" style="display:none;">
+                <table class="transaction-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: var(--bg-color);">
+                            <th
+                                style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border-color);">
+                                Reference Identifier</th>
+                            <th
+                                style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border-color);">
+                                Registry Filing Date</th>
+                            <th
+                                style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border-color);">
+                                Principal & Term</th>
+                            <th
+                                style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border-color);">
+                                Yield & Obligation</th>
+                            <th
+                                style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border-color);">
+                                Underwriting Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loanBody"></tbody>
+                </table>
+            </div>
+            <div id="errorMsg" class="error" style="display:none; margin: 24px; padding: 16px; border-radius: 8px;">
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: footerFragment}"></div>
+
+    <script th:src="@{/js/loan-status.js}"></script>
+</body>
+
+</html>

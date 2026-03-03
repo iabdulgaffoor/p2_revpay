@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/layout :: headFragment('Business Intelligence Registry | RevPay')}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div th:replace="~{fragments/layout :: headerFragment}"></div>
+
+    <div class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+            <div>
+                <h1 style="font-weight: 600; font-size: 1.8rem; margin: 0;">Business Intelligence Registry</h1>
+                <p style="color: var(--text-muted); font-size: 0.875rem;">Consolidated fiscal performance telemetry and
+                    enterprise liquidity monitoring.</p>
+            </div>
+            <a href="/invoice/manage" class="btn">Access Billing Registry</a>
+        </div>
+
+        <div id="loader" style="text-align:center; padding: 80px; color: var(--text-muted);">
+            <div style="font-size: 0.875rem; letter-spacing: 0.05em; text-transform: uppercase;">Synchronizing Business
+                Telemetry...</div>
+        </div>
+
+        <div id="dashboardContent" style="display:none;">
+            <!-- KPI Cards -->
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 40px;">
+                <div class="card" style="padding: 32px; border: 1px solid var(--border-color); box-shadow: none;">
+                    <div
+                        style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">
+                        Consolidated Inflow</div>
+                    <div style="font-size: 2.25rem; font-weight: 700; color: var(--primary-color); margin-bottom: 8px;"
+                        id="valTotalReceived">USD 0.00</div>
+                    <div style="font-size: 0.75rem; color: var(--success); font-weight: 500;">Authorized registry
+                        credits</div>
+                </div>
+                <div class="card" style="padding: 32px; border: 1px solid var(--border-color); box-shadow: none;">
+                    <div
+                        style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">
+                        Operational Outflow</div>
+                    <div style="font-size: 2.25rem; font-weight: 700; color: var(--danger); margin-bottom: 8px;"
+                        id="valTotalSent">USD 0.00</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">Disbursements & fiscal
+                        obligations</div>
+                </div>
+                <div class="card" style="padding: 32px; border: 1px solid var(--border-color); box-shadow: none;">
+                    <div
+                        style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">
+                        Outstanding Receivables</div>
+                    <div style="font-size: 2.25rem; font-weight: 700; color: var(--warning); margin-bottom: 8px;"
+                        id="valOutstanding">USD 0.00</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;"><span
+                            id="valPendingCount" style="font-weight: 700;">0</span> pending statement documents</div>
+                </div>
+            </div>
+
+            <!-- Charts Area -->
+            <div
+                style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 40px; align-items: start;">
+                <div class="card" style="padding: 40px; border: 1px solid var(--border-color); box-shadow: none;">
+                    <div
+                        style="font-weight: 700; font-size: 0.8125rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 32px; letter-spacing: 0.05em;">
+                        Liquidity Flow Protocol</div>
+                    <div style="height: 350px;">
+                        <canvas id="cashflowChart"></canvas>
+                    </div>
+                </div>
+                <div class="card" style="padding: 40px; border: 1px solid var(--border-color); box-shadow: none;">
+                    <div
+                        style="font-weight: 700; font-size: 0.8125rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 32px; letter-spacing: 0.05em;">
+                        Statement Amortization</div>
+                    <div style="height: 350px; display: flex; align-items: center; justify-content: center;">
+                        <canvas id="invoiceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card"
+                style="padding: 40px; background: var(--bg-color); border: 1px solid var(--border-color); box-shadow: none;">
+                <div
+                    style="font-weight: 700; font-size: 0.8125rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 24px;">
+                    Business Operational Utilities</div>
+                <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                    <a href="/invoice/create" class="btn" style="padding: 12px 24px; font-size: 0.875rem;">Generate
+                        Billing Statement</a>
+                    <a href="/loan/apply" class="btn btn-secondary"
+                        style="padding: 12px 24px; font-size: 0.875rem; background: white; color: var(--primary-color); border: 1px solid var(--border-color);">Requisition
+                        Credit Facility</a>
+                    <a href="/profile" class="btn btn-secondary"
+                        style="padding: 12px 24px; font-size: 0.875rem; background: white; color: var(--primary-color); border: 1px solid var(--border-color);">Verify
+                        Entity Documentation</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="errorMsg" class="error" style="display:none; margin-top: 24px; padding: 16px; border-radius: 8px;">
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: footerFragment}"></div>
+
+    <script th:src="@{/js/business-dashboard.js}"></script>
+</body>
+
+</html>

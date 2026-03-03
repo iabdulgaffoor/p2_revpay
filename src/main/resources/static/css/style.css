@@ -1,0 +1,431 @@
+/* style.css — RevPay Monochrome + Green */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #111111;
+    --primary-light: #222222;
+    --accent-color: #16a34a;
+    --accent-hover: #15803d;
+    --bg-color: #fafafa;
+    --card-bg: #ffffff;
+    --text-main: #111111;
+    --text-secondary: #555555;
+    --text-muted: #999999;
+    --border-color: #e0e0e0;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #ca8a04;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.08);
+    --shadow-lg: 0 4px 12px 0 rgb(0 0 0 / 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ── Header ── */
+header {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 2rem;
+    height: 52px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header .logo a {
+    color: var(--primary-color) !important;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 500;
+    transition: color 0.15s;
+    font-size: 0.8125rem;
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+
+.nav-links a:hover {
+    color: var(--text-main);
+    background-color: #f0f0f0;
+}
+
+.nav-links a.active {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.auth-nav {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 0.75rem;
+    padding-left: 1rem;
+    border-left: 1px solid var(--border-color);
+}
+
+/* ── Layout ── */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ── Cards ── */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    box-shadow: var(--shadow);
+}
+
+.card-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+}
+
+/* ── Forms ── */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--text-main);
+    font-size: 0.8125rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 0.875rem;
+    transition: border-color 0.15s;
+    background-color: #ffffff;
+    color: var(--text-main);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+/* ── Buttons ── */
+.btn {
+    background-color: var(--accent-color);
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    transition: background-color 0.15s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+}
+
+.btn:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn:active {
+    background-color: #14532d;
+}
+
+.btn-secondary {
+    background-color: #ffffff;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+}
+
+.btn-danger {
+    background-color: transparent;
+    color: var(--danger);
+    border: 1px solid #fecaca;
+}
+
+.btn-danger:hover {
+    background-color: #fef2f2;
+}
+
+/* ── Loading ── */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e0e0e0;
+    border-top: 2px solid var(--accent-color);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Messages ── */
+.error {
+    color: var(--danger);
+    font-size: 0.8125rem;
+    background: #fef2f2;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #fecaca;
+    margin-bottom: 1rem;
+}
+
+/* ── Footer ── */
+footer {
+    text-align: center;
+    padding: 1.5rem 2rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ── Dashboard Balance Card ── */
+.enterprise-balance-card {
+    background: var(--primary-color);
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 32px;
+}
+
+.balance-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 4px;
+}
+
+.balance-amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 24px 0;
+    letter-spacing: -0.03em;
+}
+
+.balance-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ── Badges ── */
+.role-badge {
+    background: #f5f5f5;
+    color: var(--text-secondary);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+    margin-left: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.status-badge {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.status-success {
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.status-warning {
+    background-color: #fefce8;
+    color: #854d0e;
+}
+
+.status-danger {
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.status-info {
+    background: #f5f5f5;
+    color: #333333;
+}
+
+.text-success {
+    color: var(--success);
+}
+
+.text-danger {
+    color: var(--danger);
+}
+
+/* ── Tables ── */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    color: var(--text-muted);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+td {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.8125rem;
+}
+
+/* ── Notifications ── */
+.notification-item {
+    padding: 14px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border-color);
+    transition: background 0.15s;
+}
+
+.notification-item.unread {
+    background: #fafafa;
+    border-left: 3px solid var(--accent-color);
+}
+
+/* ── Modal ── */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #ffffff;
+    border-radius: 8px;
+    max-width: 480px;
+    width: 90%;
+    margin: auto;
+}
+
+/* ── Utility ── */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}

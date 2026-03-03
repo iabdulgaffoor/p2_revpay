@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="headFragment (title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" th:href="@{/img/favicon.png}">
+    <title th:text="${title}">RevPay | Enterprise Financial Protocol</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/app.js}"></script>
+</head>
+
+<body>
+    <!-- Global Loading Overlay -->
+    <div id="globalLoader" class="loader-overlay" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Top Header -->
+    <header th:fragment="headerFragment">
+        <div class="logo">
+            <a th:href="@{/}" id="navHome">RevPay</a>
+        </div>
+        <div class="nav-links">
+            <span id="authenticatedLinks" style="display:none;">
+                <a th:href="@{/dashboard}" id="navDashboard">Dashboard</a>
+                <a th:href="@{/transaction/history}" id="navTransactions">Transactions</a>
+                <a th:href="@{/money-request/manage}" id="navRequests">Requests</a>
+                <a th:href="@{/payment-method/manage}" id="navCards">Cards</a>
+                <a th:href="@{/notifications}" id="navNotifications">Notifications</a>
+                <a th:href="@{/admin}" id="navAdmin" style="display:none;">Admin</a>
+                <a th:href="@{/invoice/manage}" id="navInvoices" style="display:none;">Invoices</a>
+                <a th:href="@{/loan/status}" id="navLoans" style="display:none;">Loans</a>
+                <a th:href="@{/business/analytics}" id="navAnalytics" style="display:none;">Analytics</a>
+            </span>
+            <span class="auth-nav">
+                <a th:href="@{/profile}" id="navProfile">Profile</a>
+                <a href="#" onclick="handleLogout()" id="logoutLink" style="display:none;">Logout</a>
+            </span>
+            <span class="auth-nav guest-only">
+                <a th:href="@{/login}" id="loginLink">Login</a>
+                <a th:href="@{/register}" id="registerLink">Register</a>
+            </span>
+        </div>
+    </header>
+
+    <!-- Sidebar removed, links moved to navbar -->
+    <div th:fragment="sidebarFragment" style="display:none;"></div>
+
+    <!-- Footer -->
+    <footer th:fragment="footerFragment">
+        <p>&copy; 2026 RevPay Financial Services</p>
+    </footer>
+</body>
+
+</html>

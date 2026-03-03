@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/layout :: headFragment('Admin Dashboard | RevPay')}"></div>
+</head>
+
+<body>
+    <div th:replace="~{fragments/layout :: headerFragment}"></div>
+
+    <div class="main-content" id="appMainContent" style="display:none;">
+        <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <h1 style="font-weight: 600; font-size: 1.8rem; margin: 0;">System Administration Command</h1>
+                <p style="color: var(--text-muted); font-size: 0.875rem;">Global oversight and protocol management for
+                    the RevPay fiscal ecosystem.</p>
+            </div>
+            <span class="role-badge"
+                style="background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; font-weight: 700; font-size: 0.625rem; letter-spacing: 0.05em;">ADMINISTRATIVE
+                AUTHORIZATION</span>
+        </div>
+
+        <!-- High-Level Metrics -->
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin-bottom: 40px;">
+            <div class="card" style="padding: 32px; border: 1px solid var(--border-color); box-shadow: none;">
+                <div
+                    style="color: var(--primary-color); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;">
+                    Consolidated Entity Registry</div>
+                <div style="font-size: 2.25rem; font-weight: 600; color: var(--primary-color); margin-bottom: 4px;"
+                    id="metricTotalUsers">0</div>
+                <div style="font-size: 0.8125rem; color: var(--text-muted);">Verified system participants</div>
+            </div>
+
+            <div class="card" style="padding: 32px; border: 1px solid var(--border-color); box-shadow: none;">
+                <div
+                    style="color: var(--primary-color); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;">
+                    Cumulative Fiscal Throughput</div>
+                <div style="font-size: 2.25rem; font-weight: 600; color: var(--primary-color); margin-bottom: 4px;"
+                    id="metricTotalVolume">USD 0.00</div>
+                <div style="font-size: 0.8125rem; color: var(--text-muted);">Aggregated lifetime valuation</div>
+            </div>
+
+            <div class="card" style="padding: 32px; border: 1px solid var(--border-color); box-shadow: none;">
+                <div
+                    style="color: var(--primary-color); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;">
+                    Authorized Operational Volume</div>
+                <div style="font-size: 2.25rem; font-weight: 600; color: var(--primary-color); margin-bottom: 4px;"
+                    id="metricTotalTx">0</div>
+                <div style="font-size: 0.8125rem; color: var(--text-muted);">Total ledger activities</div>
+            </div>
+
+            <div class="card"
+                style="padding: 32px; border: 1px solid var(--primary-color); background: var(--bg-color); box-shadow: none;">
+                <div
+                    style="color: var(--primary-color); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px;">
+                    System Diagnostic Telemetry</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--success); margin-bottom: 4px;"
+                    id="metricSystemStatus">OPERATIONAL</div>
+                <div style="font-size: 0.8125rem; color: var(--text-muted);">Active core synchronization</div>
+            </div>
+        </div>
+
+        <!-- User Management Table -->
+        <div class="card"
+            style="padding: 0; overflow: hidden; margin-bottom: 48px; border: 1px solid var(--border-color); box-shadow: none;">
+            <div
+                style="padding: 40px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #fafafa;">
+                <div>
+                    <div
+                        style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 8px; letter-spacing: 0.05em;">
+                        Participant Registry</div>
+                    <p style="color: var(--text-muted); font-size: 0.8125rem; margin: 0;">Comprehensive index of all
+                        authorized entities within the system.</p>
+                </div>
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <div style="position: relative; width: 320px;">
+                        <input type="text" id="userSearchInput" placeholder="Filter by Name, ID, or Classification..."
+                            onkeyup="handleUserSearch()"
+                            style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8125rem; background: white;">
+                    </div>
+                    <button onclick="openUserModal()" class="btn"
+                        style="padding: 12px 24px; font-size: 0.8125rem;">Provision Account</button>
+                </div>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead style="background: #f8fafc;">
+                        <tr>
+                            <th style="padding: 16px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color); cursor: pointer;"
+                                onclick="sortByColumn('id')">Reference <span id="sort-icon-id"></span></th>
+                            <th style="padding: 16px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color); cursor: pointer;"
+                                onclick="sortByColumn('fullName')">Entity Identity <span id="sort-icon-fullName"></span>
+                            </th>
+                            <th style="padding: 16px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color); cursor: pointer;"
+                                onclick="sortByColumn('email')">System Identifier <span id="sort-icon-email"></span>
+                            </th>
+                            <th style="padding: 16px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color); cursor: pointer;"
+                                onclick="sortByColumn('role')">Role Classification <span id="sort-icon-role"></span>
+                            </th>
+                            <th
+                                style="padding: 16px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                                Status</th>
+                            <th
+                                style="padding: 16px; text-align: right; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                                Operational Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+                <div id="paginationControls" style="padding: 24px; border-top: 1px solid var(--border-color);"></div>
+            </div>
+        </div>
+
+        <!-- Loan Management Table -->
+        <div class="card"
+            style="padding: 0; overflow: hidden; border: 1px solid var(--border-color); box-shadow: none;">
+            <div style="padding: 40px; border-bottom: 1px solid var(--border-color); background: #fafafa;">
+                <div
+                    style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 8px; letter-spacing: 0.05em;">
+                    Credit Underwriting Protocols</div>
+                <p style="color: var(--text-muted); font-size: 0.8125rem; margin: 0;">Authorization and adjudication of
+                    active credit requisitions.</p>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead style="background: #f8fafc;">
+                        <tr>
+                            <th
+                                style="padding: 16px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                                Filing Reference</th>
+                            <th
+                                style="padding: 16px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                                Business Entity</th>
+                            <th
+                                style="padding: 16px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                                Credit Valuation</th>
+                            <th
+                                style="padding: 16px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                                Allocation Purpose</th>
+                            <th
+                                style="padding: 16px; text-align: left; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                                Protocol Status</th>
+                            <th
+                                style="padding: 16px; text-align: right; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                                Fiscal Authorization</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loanTableBody">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Balance Modal -->
+        <div id="balanceModal" class="modal">
+            <div class="modal-content"
+                style="max-width: 440px; padding: 48px; border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+                <div
+                    style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 24px; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                    Fiscal Credit Adjustment</div>
+                <p style="color: var(--text-muted); font-size: 0.8125rem; margin-bottom: 32px;">Adjusting treasury
+                    balance for <strong id="adjustTargetName" style="color: var(--primary-color);"></strong>. Please
+                    authorize with caution.</p>
+                <input type="hidden" id="adjustTargetId">
+
+                <div class="form-group" style="margin-bottom: 32px;">
+                    <label style="font-size: 0.75rem;">Adjustment Magnitude (USD)</label>
+                    <input type="number" id="adjustAmount" step="0.01" min="0.01" placeholder="0.00" required
+                        style="width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color); font-size: 1.125rem; font-weight: 600;">
+                </div>
+
+                <div id="adjustMsg" style="margin-bottom: 24px; font-size: 0.8125rem; text-align: center;"></div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <button class="btn" onclick="adjustBalance('add')" style="padding: 12px;">Authorize Credit</button>
+                    <button class="btn btn-secondary" onclick="adjustBalance('deduct')"
+                        style="background: white; color: var(--danger); border: 1px solid #fecaca; padding: 12px;">Authorize
+                        Debit</button>
+                </div>
+                <button class="btn btn-secondary" onclick="closeModal('balanceModal')"
+                    style="width: 100%; padding: 12px; background: #f1f5f9; color: var(--text-secondary); border: none;">Terminate
+                    Protocol</button>
+            </div>
+        </div>
+
+        <!-- User Management Modal -->
+        <div id="userModal" class="modal">
+            <div class="modal-content"
+                style="max-width: 700px; padding: 56px; border: 1px solid var(--border-color); border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+                <div style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 8px; letter-spacing: 0.1em;"
+                    id="userModalTitle">Identity Provisioning Protocol</div>
+                <p
+                    style="color: var(--text-muted); font-size: 0.8125rem; margin-bottom: 32px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+                    Authorization and configuration of system participant metadata.</p>
+
+                <form id="userForm" onsubmit="handleUserSubmit(event)">
+                    <input type="hidden" id="editUserId">
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                        <div class="form-group">
+                            <label>Legal Entity Name</label>
+                            <input type="text" id="userFullName" required
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                        </div>
+                        <div class="form-group">
+                            <label>System Identifier (Email)</label>
+                            <input type="email" id="userEmail" required
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                        <div class="form-group">
+                            <label>Telecommunication No.</label>
+                            <input type="text" id="userPhone" required
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                        </div>
+                        <div class="form-group">
+                            <label>Role Classification</label>
+                            <select id="userRole" onchange="toggleBusinessFields()"
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color); font-weight: 600;">
+                                <option value="PERSONAL">Personal Account</option>
+                                <option value="BUSINESS">Business Entity</option>
+                                <option value="ADMIN">System Administrator</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                        <div class="form-group">
+                            <label>Recovery Challenge</label>
+                            <input type="text" id="userSecQ" required placeholder="e.g. Origin City"
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                        </div>
+                        <div class="form-group">
+                            <label>Challenge Response</label>
+                            <input type="text" id="userSecA" required
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+                        <div class="form-group">
+                            <label>Operational Status</label>
+                            <select id="userStatus"
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                                <option value="true">Operational (Active)</option>
+                                <option value="false">Suspended (Inactive)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label id="userPasswordLabel">Security Credential</label>
+                            <input type="password" id="userPassword" placeholder="Minimum 8 characters"
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                        </div>
+                    </div>
+
+                    <!-- Business Only Fields -->
+                    <div id="businessFields"
+                        style="display:none; background: #f8fafc; padding: 32px; border-radius: 8px; margin-bottom: 32px; border: 1px solid var(--border-color);">
+                        <div
+                            style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 24px; letter-spacing: 0.05em;">
+                            Corporate Registry Metadata</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                            <div class="form-group">
+                                <label>Registered Corporate Name</label>
+                                <input type="text" id="bizName"
+                                    style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: white;">
+                            </div>
+                            <div class="form-group">
+                                <label>Industrial Segment</label>
+                                <input type="text" id="bizType"
+                                    style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: white;">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 24px;">
+                            <label>Tax Identification Index (TIN)</label>
+                            <input type="text" id="bizTax"
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: white;">
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                <input type="checkbox" id="bizVerified"
+                                    style="width: 20px; height: 20px; border: 1px solid var(--border-color); border-radius: 4px;">
+                                <span
+                                    style="font-size: 0.8125rem; font-weight: 600; color: var(--primary-color);">Authorize
+                                    Entity Verification Status</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="userFormMsg" style="margin-bottom: 32px; font-size: 0.8125rem; text-align: center;"></div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <button type="submit" class="btn" id="saveUserBtn" style="padding: 14px;">Authorize
+                            Provisioning</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('userModal')"
+                            style="padding: 14px; background: white; color: var(--text-secondary); border: 1px solid var(--border-color);">Decline</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: footerFragment}"></div>
+
+    <script th:src="@{/js/admin.js}"></script>
+</body>
+
+</html>

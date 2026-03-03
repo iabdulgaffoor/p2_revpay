@@ -1,530 +1,137 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Dashboard | RevPay</title>
-    <link rel="stylesheet" th:href="@{/css/main.css}">
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <div th:replace="~{fragments/layout :: headFragment('Identity Registry Dashboard | RevPay')}"></div>
 </head>
 
 <body>
-    <nav>
-        <div class="logo">REVPAY</div>
-        <div class="nav-links">
-            <span class="role-badge" th:text="${user.accountType}">Role</span>
-            <form th:action="@{/logout}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-secondary border-none-p05">Logout</button>
-            </form>
-        </div>
-    </nav>
+    <div th:replace="~{fragments/layout :: headerFragment}"></div>
 
-    <div class="container">
-        <div class="section-header">
-            <h2>Command Center</h2>
-            <p th:text="'Welcome back, ' + ${user.fullName}"></p>
+    <div class="main-content" id="appMainContent" style="display:none;">
+        <div style="margin-bottom: 32px;">
+            <h1 style="font-weight: 600; font-size: 1.8rem; margin: 0;">
+                <span id="welcomeMsg">Registry Session</span>
+                <span id="roleBadge" class="status-badge status-info"
+                    style="display:none; font-size: 0.625rem; vertical-align: middle; margin-left: 12px; padding: 4px 8px;"></span>
+            </h1>
+            <p style="color: var(--text-muted); font-size: 0.875rem;">Account synchronization and liquidity overview.
+            </p>
         </div>
 
-        <div class="grid-3">
-            <div class="auth-card balance-card dashboard-card">
-                <h3 class="text-secondary mb-1">Stable Balance</h3>
-                <h2 class="balance-amount" th:text="'$' + ${wallet.balance}">$0.00</h2>
-                <div class="mt-1-5">
-                    <button onclick="openModal('sendMoneyModal')" class="btn btn-primary w-full">Send
-                        Money</button>
-                </div>
+        <!-- Wallet Balance Card -->
+        <div class="enterprise-balance-card">
+            <div style="display:none;">
             </div>
 
-            <!-- Pending Money Requests Panel -->
-            <div class="auth-card request-card dashboard-card" th:if="${not #lists.isEmpty(pendingMoneyRequests)}">
-                <h3 class="mb-1">Requests for You</h3>
-                <div th:each="req : ${pendingMoneyRequests}" class="req-item">
-                    <div class="flex-between-start">
-                        <div>
-                            <p class="font-600" th:text="${req.requester.fullName}">Requester</p>
-                            <p class="text-xs-secondary" th:text="${req.purpose}">Purpose
-                            </p>
-                        </div>
-                        <p class="amount-requested" th:text="'$' + ${req.amount}">$0.00</p>
+            <div
+                style="font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; margin-bottom: 12px;">
+                Primary Liquid Assets</div>
+            <div style="font-size: 3rem; font-weight: 700; margin-bottom: 32px; letter-spacing: -0.02em;"
+                id="walletBalance">USD 0.00</div>
+
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <button onclick="window.location.href='/wallet'" class="btn"
+                    style="background: white; color: var(--primary-color); padding: 10px 24px; font-size: 0.875rem;">Manage
+                    Liquidity</button>
+                <button onclick="window.location.href='/transaction/send'" class="btn"
+                    style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px 24px; font-size: 0.875rem;">Initialize
+                    Disbursement</button>
+                <button onclick="window.location.href='/transaction/requests'" class="btn"
+                    style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px 24px; font-size: 0.875rem;">Solicit
+                    Funds</button>
+            </div>
+        </div>
+
+        <!-- KPI Widgets -->
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 40px;">
+            <div class="card" style="padding: 24px; border: 1px solid var(--border-color); box-shadow: none;">
+                <div
+                    style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
+                    Pending Solicitations</div>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);" id="pendingRequestsCount">0
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Awaiting authorization</div>
+            </div>
+            <div class="card" style="padding: 24px; border: 1px solid var(--border-color); box-shadow: none;">
+                <div
+                    style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
+                    System Dispatches</div>
+                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);" id="notificationCount">0
+                </div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Unread communications</div>
+            </div>
+
+            <div id="businessKpis" style="display: contents;">
+                <div class="card business-only"
+                    style="display: none; padding: 24px; border: 1px solid var(--border-color); box-shadow: none;">
+                    <div
+                        style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
+                        Aggregate Inflow</div>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--success);" id="totalReceived">USD 0.00
                     </div>
-                    <div class="flex-gap-mt-1">
-                        <button th:onclick="'openAcceptModal(' + ${req.id} + ')'"
-                            class="btn btn-primary btn-sm-flex">Accept</button>
-                        <form th:action="@{/money-request/reject}" method="post" class="flex-1">
-                            <input type="hidden" name="requestId" th:value="${req.id}" />
-                            <button type="submit" class="btn btn-secondary btn-danger-sm">Reject</button>
-                        </form>
-                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Registry verified</div>
                 </div>
-            </div>
-
-            <!-- Merchant Tools for Business -->
-            <div sec:authorize="hasRole('BUSINESS')" class="auth-card merchant-card dashboard-card">
-                <h3 class="mb-1">Merchant Tools</h3>
-                <div class="flex-col-gap-075">
-                    <button onclick="openModal('invoiceModal')" class="btn btn-primary">Create Invoice</button>
-                    <button onclick="openModal('requestMoneyModal')" class="btn btn-secondary">Request Payment</button>
-                    <button onclick="openModal('loanModal')" class="btn btn-secondary">Apply for Business Loan</button>
-                </div>
-            </div>
-
-            <!-- Security Settings -->
-            <div class="auth-card security-card dashboard-card">
-                <h3 class="mb-1">Security Settings</h3>
-                <div class="flex-col-gap-075">
-                    <button onclick="openModal('updatePasswordModal')" class="btn btn-secondary">Update
-                        Password</button>
-                    <button onclick="openModal('updatePinModal')" class="btn btn-secondary">Update Transaction
-                        PIN</button>
-                </div>
-            </div>
-
-            <!-- Upgrade Path for Personal (Conditional) -->
-            <div th:if="${user.accountType.name() == 'PERSONAL'}" class="auth-card upgrade-card dashboard-card">
-                <h3 class="mb-1">Elevate to Business</h3>
-                <p class="text-sm-secondary mb-1-5">Unlock enterprise tools for growth.</p>
-                <button onclick="openModal('upgradeModal')" class="btn btn-secondary w-full">Upgrade
-                    Account</button>
-            </div>
-
-            <!-- Notifications Panel (Universal) -->
-            <div class="auth-card notif-card dashboard-card">
-                <h3 class="mb-1">Recent Notifications</h3>
-                <div class="notif-list">
-                    <div th:each="note : ${notifications}" class="notif-item">
-                        <p class="text-sm-85" th:text="${note.message}">Message</p>
-                        <p class="text-xs-secondary" th:text="${#temporals.format(note.createdAt, 'MMM dd, HH:mm')}">
-                            Date</p>
-                    </div>
-                    <div th:if="${#lists.isEmpty(notifications)}" class="notif-empty">
-                        No new notifications
+                <div class="card business-only"
+                    style="display: none; padding: 24px; border: 1px solid var(--border-color); box-shadow: none;">
+                    <div
+                        style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
+                        Aggregate Outflow</div>
+                    <div style="font-size: 2rem; font-weight: 700; color: var(--text-secondary);" id="totalSent">USD
+                        0.00</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Total disbursements
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Activity Ledger (Unified) -->
-        <div class="auth-card ledger-card">
-            <div class="section-header">
-                <h3>Unified Activity Ledger</h3>
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>PARTY</th>
-                            <th>TYPE</th>
-                            <th>AMOUNT</th>
-                            <th>DATE</th>
-                            <th>STATUS</th>
-                            <th sec:authorize="hasRole('ADMIN')">ACTIONS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="log : ${activityLog}">
-                            <td th:text="${log.id}">ID</td>
-                            <td th:text="${log.party}">Party</td>
-                            <td><span class="role-badge text-xs" th:text="${log.type}">TYPE</span>
-                            </td>
-                            <td th:class="${log.isOutgoing ? 'negative' : 'positive'}"
-                                th:text="${log.isOutgoing ? '-$' + log.amount : '+$' + log.amount}">AMOUNT</td>
-                            <td th:text="${#temporals.format(log.date, 'yyyy-MM-dd HH:mm')}">DATE</td>
-                            <td>
-                                <span th:class="'status-pill status-' + ${#strings.toLowerCase(log.status)}"
-                                    th:text="${log.status}">STATUS</span>
-                            </td>
-                            <td sec:authorize="hasRole('ADMIN')">
-                                <form th:if="${log.type == 'TRANSFER' && log.status == 'COMPLETED'}"
-                                    th:action="@{'/admin/cancel-transaction/' + ${log.id}}" method="post">
-                                    <button class="btn btn-secondary ledger-action-btn">Reverse</button>
-                                </form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Admin Governance -->
-        <div sec:authorize="hasRole('ADMIN')" class="auth-card gov-card">
-            <div class="section-header">
-                <h3>System Governance</h3>
+        <!-- Recent Transactions -->
+        <div class="card"
+            style="padding: 0; overflow: hidden; border: 1px solid var(--border-color); box-shadow: none;">
+            <div
+                style="padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
+                <h3 style="margin: 0; color: var(--primary-color); font-size: 1rem; font-weight: 700;">Recent Ledger
+                    Activities</h3>
+                <a th:href="@{/transaction/history}"
+                    style="color: var(--accent-color); text-decoration: none; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Access
+                    Full Archive</a>
             </div>
 
-            <h4 style="margin: 1.5rem 0 1rem;">User Directory & Control</h4>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>USER</th>
-                            <th>TYPE</th>
-                            <th>STATUS</th>
-                            <th>ACTIONS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="u : ${allUsers}">
-                            <td th:text="${u.id}">ID</td>
-                            <td th:text="${u.fullName + ' (' + u.email + ')'}">USER</td>
-                            <td th:text="${u.accountType}">TYPE</td>
-                            <td><span th:class="'status-pill status-' + ${#strings.toLowerCase(u.status)}"
-                                    th:text="${u.status}">STATUS</span></td>
-                            <td>
-                                <div class="flex-gap-05">
-                                    <button th:onclick="'openAdminUserModal(' + ${u.id} + ')'"
-                                        class="btn btn-primary btn-sm">Manage</button>
-                                    <button type="button" th:data-user-id="${u.id}" th:data-user-name="${u.fullName}"
-                                        onclick="openAddMoneyModal(this.getAttribute('data-user-id'), this.getAttribute('data-user-name'))"
-                                        class="btn btn-primary btn-deposit">Deposit</button>
-                                    <form th:action="@{'/admin/toggle-status/' + ${u.id}}" method="post">
-                                        <button class="btn btn-secondary btn-sm"
-                                            th:text="${u.status.name() == 'ACTIVE' ? 'Suspend' : 'Activate'}">Toggle</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div id="noTransactions" style="text-align: center; padding: 60px; color: var(--text-muted);">
+                <div style="font-size: 0.875rem;">No transaction activities discovered in registry.</div>
             </div>
 
-            <div class="grid-2-gap-2 mt-2">
-                <div>
-                    <h4 style="margin-bottom: 1rem;">Pending Business Verifications</h4>
-                    <div class="table-container">
-                        <table>
-                            <tbody>
-                                <tr th:each="bp : ${pendingBusinessProfiles}">
-                                    <td th:text="${bp.businessName}">Business</td>
-                                    <td>
-                                        <form th:action="@{'/admin/approve-business/' + ${bp.id}}" method="post">
-                                            <button class="btn btn-primary"
-                                                style="padding: 0.2rem 0.5rem; font-size: 0.7rem;">Approve</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <tr th:if="${#lists.isEmpty(pendingBusinessProfiles)}">
-                                    <td colspan="2" class="text-center-secondary-sm">No
-                                        pending verifications</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div>
-                    <h4 style="margin-bottom: 1rem;">Pending Loan Applications</h4>
-                    <div class="table-container">
-                        <table>
-                            <tbody>
-                                <tr th:each="loan : ${pendingLoans}">
-                                    <td th:text="${loan.user.fullName + ' ($' + loan.principalAmount + ')'}">Application
-                                    </td>
-                                    <td>
-                                        <form th:action="@{'/admin/approve-loan/' + ${loan.id}}" method="post">
-                                            <button class="btn btn-primary"
-                                                style="padding: 0.2rem 0.5rem; font-size: 0.7rem;">Approve</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <tr th:if="${#lists.isEmpty(pendingLoans)}">
-                                    <td colspan="2" class="text-center-secondary-sm">No
-                                        pending loans</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <table id="transactionsTable" style="display:none; width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: var(--bg-color);">
+                        <th
+                            style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                            Filing Date</th>
+                        <th
+                            style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                            protocol</th>
+                        <th
+                            style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                            Amount</th>
+                        <th
+                            style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                            Counterparty</th>
+                        <th
+                            style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                            Status</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionList">
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Modals -->
-    <div id="sendMoneyModal" class="modal">
-        <div class="modal-content">
-            <h3>Send Money</h3>
-            <form th:action="@{/send-money}" method="post">
-                <div class="form-group"><label>Recipient Email/Phone</label><input type="text" name="receiverIdentifier"
-                        required class="btn btn-secondary text-left-btn" /></div>
-                <div class="form-group"><label>Amount ($)</label><input type="number" step="0.01" name="amount" required
-                        class="btn btn-secondary text-left-btn" /></div>
-                <div class="form-group"><label>Transaction PIN</label><input type="password" name="pin" maxlength="4"
-                        required class="btn btn-secondary pin-input" /></div>
-                <button type="submit" class="btn btn-primary w-full mt-1">Confirm
-                    Transfer</button>
-                <button type="button" onclick="closeModal('sendMoneyModal')"
-                    class="btn btn-secondary w-full mt-05 border-none">Cancel</button>
-            </form>
-        </div>
-    </div>
+    <div th:replace="~{fragments/layout :: footerFragment}"></div>
 
-    <div id="adminUserModal" class="modal">
-        <div class="modal-content max-w-800">
-            <h3 id="adminUserTitle">User Governance</h3>
-
-            <div id="userHistoryContainer" class="history-container">
-                <p class="text-secondary text-center">Loading activity history...</p>
-            </div>
-
-            <div class="grid-2-gap-1-5 mt-1-5">
-                <form th:action="@{/admin/reset-password}" method="post">
-                    <input type="hidden" name="userId" id="adminUserId_pw" />
-                    <div class="form-group"><label>New Password</label><input type="text" name="newPassword" required
-                            class="btn btn-secondary text-left-btn" /></div>
-                    <button type="submit" class="btn btn-secondary w-full">Reset Password</button>
-                </form>
-                <form th:action="@{/admin/reset-pin}" method="post">
-                    <input type="hidden" name="userId" id="adminUserId_pin" />
-                    <div class="form-group"><label>New 4-Digit PIN</label><input type="text" name="newPin" maxlength="4"
-                            required class="btn btn-secondary text-left-btn" /></div>
-                    <button type="submit" class="btn btn-secondary w-full">Reset Transaction PIN</button>
-                </form>
-                <hr class="hr-border" />
-                <button onclick="closeModal('adminUserModal')" class="btn btn-primary w-full">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="requestMoneyModal" class="modal">
-        <div class="modal-content">
-            <h3>Request Payment</h3>
-            <form th:action="@{/money-request/send}" method="post">
-                <div class="form-group"><label>Customer Email</label><input type="email" name="requestedFromEmail"
-                        required class="btn btn-secondary text-left-btn" /></div>
-                <div class="form-group"><label>Amount ($)</label><input type="number" step="0.01" name="amount" required
-                        class="btn btn-secondary text-left-btn" /></div>
-                <div class="form-group"><label>Purpose</label><input type="text" name="purpose" required
-                        class="btn btn-secondary text-left-btn" /></div>
-                <button type="submit" class="btn btn-primary w-full mt-1">Send
-                    Request</button>
-                <button type="button" onclick="closeModal('requestMoneyModal')"
-                    class="btn btn-secondary w-full mt-05 border-none">Cancel</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="acceptRequestModal" class="modal">
-        <div class="modal-content">
-            <h3>Authorize Payment</h3>
-            <form th:action="@{/money-request/accept}" method="post">
-                <input type="hidden" name="requestId" id="acceptRequestId" />
-                <div class="form-group"><label>Transaction PIN</label><input type="password" name="pin" maxlength="4"
-                        required class="btn btn-secondary pin-input" /></div>
-                <button type="submit" class="btn btn-primary w-full mt-1">Confirm &
-                    Pay</button>
-                <button type="button" onclick="closeModal('acceptRequestModal')"
-                    class="btn btn-secondary w-full mt-05 border-none">Cancel</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="upgradeModal" class="modal">
-        <div class="modal-content">
-            <h3>Business Registration</h3>
-            <form th:action="@{/business/apply}" method="post">
-                <div class="form-group"><label>Enterprise Name</label><input type="text" name="businessName" required
-                        class="btn btn-secondary text-left-btn" /></div>
-                <div class="form-group"><label>Tax Identification (EIN)</label><input type="text" name="taxId" required
-                        class="btn btn-secondary text-left-btn" /></div>
-                <button type="submit" class="btn btn-primary w-full mt-1">Apply for
-                    Verification</button>
-                <button type="button" onclick="closeModal('upgradeModal')"
-                    class="btn btn-secondary w-full mt-05 border-none">Cancel</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="invoiceModal" class="modal">
-        <div class="modal-content">
-            <h3>Create Business Invoice</h3>
-            <form th:action="@{/business/invoice/create}" method="post">
-                <div class="form-group">
-                    <label>Customer Email</label>
-                    <input type="email" name="customerEmail" required class="btn btn-secondary text-left-btn" />
-                </div>
-                <div class="form-group">
-                    <label>Total Amount ($)</label>
-                    <input type="number" step="0.01" name="totalAmount" id="invoiceTotalAmount" required readonly
-                        class="btn btn-secondary text-left-btn readonly-total" />
-                </div>
-                <div class="form-group">
-                    <label>Due Date</label>
-                    <input type="date" name="dueDate" required class="btn btn-secondary text-left-btn" />
-                </div>
-                <div id="invoiceItemsContainer">
-                    <div class="flex-center-between mb-05">
-                        <label>Items</label>
-                        <button type="button" onclick="addInvoiceItem()" class="btn btn-secondary btn-sm">+ Add
-                            Item</button>
-                    </div>
-                    <div class="invoice-item-row flex-col-gap-05 mb-1-5 dashed-border-bottom pb-1">
-                        <div class="form-group mb-0">
-                            <label class="item-label">Item Name</label>
-                            <input type="text" name="items[0].description" placeholder="Description" required
-                                class="btn btn-secondary text-left-btn text-sm" />
-                        </div>
-                        <div class="grid-2-gap-05">
-                            <div class="form-group mb-0">
-                                <label class="item-label">Quantity</label>
-                                <input type="number" name="items[0].quantity" placeholder="Qty" required
-                                    oninput="calculateInvoiceTotal()"
-                                    class="btn btn-secondary item-qty text-left-btn text-sm" />
-                            </div>
-                            <div class="form-group mb-0">
-                                <label class="item-label">Price ($)</label>
-                                <input type="number" step="0.01" name="items[0].unitPrice" placeholder="Price" required
-                                    oninput="calculateInvoiceTotal()"
-                                    class="btn btn-secondary item-price text-left-btn text-sm" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary w-full mt-1">Generate
-                    Invoice</button>
-                <button type="button" onclick="closeModal('invoiceModal')"
-                    class="btn btn-secondary w-full mt-05 border-none">Cancel</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="updatePasswordModal" class="modal">
-        <div class="modal-content">
-            <h3>Update Password</h3>
-            <form th:action="@{/user/update-password}" method="post" onsubmit="return validatePasswords()">
-                <div class="form-group"><label>Current Password</label><input type="password" name="currentPassword"
-                        required class="btn btn-secondary text-left-btn" /></div>
-                <div class="form-group"><label>New Password</label><input type="password" name="newPassword"
-                        id="newPassword" required class="btn btn-secondary text-left-btn" /></div>
-                <div class="form-group"><label>Confirm New Password</label><input type="password" name="confirmPassword"
-                        id="confirmPassword" required class="btn btn-secondary text-left-btn" /></div>
-                <button type="submit" class="btn btn-primary w-full mt-1">Update
-                    Password</button>
-                <button type="button" onclick="closeModal('updatePasswordModal')"
-                    class="btn btn-secondary w-full mt-05 border-none">Cancel</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="updatePinModal" class="modal">
-        <div class="modal-content">
-            <h3>Update Transaction PIN</h3>
-            <form th:action="@{/user/update-pin}" method="post" onsubmit="return validatePins()">
-                <div class="form-group"><label>Current PIN</label><input type="password" name="currentPin" maxlength="4"
-                        required class="btn btn-secondary pin-input" /></div>
-                <div class="form-group"><label>New PIN</label><input type="password" name="newPin" id="newPin"
-                        maxlength="4" required class="btn btn-secondary pin-input" /></div>
-                <div class="form-group"><label>Confirm New PIN</label><input type="password" name="confirmPin"
-                        id="confirmPin" maxlength="4" required class="btn btn-secondary pin-input" /></div>
-                <button type="submit" class="btn btn-primary w-full mt-1">Update PIN</button>
-                <button type="button" onclick="closeModal('updatePinModal')"
-                    class="btn btn-secondary w-full mt-05 border-none">Cancel</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        function openModal(id) { document.getElementById(id).style.display = 'block'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function openAcceptModal(id) {
-            document.getElementById('acceptRequestId').value = id;
-            openModal('acceptRequestModal');
-        }
-        function openAdminUserModal(id) {
-            document.getElementById('adminUserId_pw').value = id;
-            document.getElementById('adminUserId_pin').value = id;
-            document.getElementById('userHistoryContainer').innerHTML = '<p style="color: var(--text-secondary); text-align: center;">Retrieving data...</p>';
-
-            fetch('/admin/user-history/' + id)
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('userHistoryContainer').innerHTML = html;
-                });
-
-            openModal('adminUserModal');
-        }
-        function validatePasswords() {
-            const newPw = document.getElementById('newPassword').value;
-            const confirmPw = document.getElementById('confirmPassword').value;
-            if (newPw !== confirmPw) {
-                alert("New passwords do not match!");
-                return false;
-            }
-            return true;
-        }
-        function validatePins() {
-            const newPin = document.getElementById('newPin').value;
-            const confirmPin = document.getElementById('confirmPin').value;
-            if (newPin !== confirmPin) {
-                alert("New PINs do not match!");
-                return false;
-            }
-            return true;
-        }
-        window.onclick = function (event) { if (event.target.className === 'modal') { event.target.style.display = 'none'; } }
-
-        let itemIndex = 1;
-        function addInvoiceItem() {
-            const container = document.getElementById('invoiceItemsContainer');
-            const row = document.createElement('div');
-            row.className = 'invoice-item-row flex-col-gap-05 mb-1-5 dashed-border-bottom pb-1';
-            row.innerHTML = `
-                <div class="form-group mb-0">
-                    <label class="item-label">Item Name</label>
-                    <input type="text" name="items[${itemIndex}].description" placeholder="Description" required
-                        class="btn btn-secondary text-left-btn text-sm" />
-                </div>
-                <div class="grid-2-gap-05">
-                    <div class="form-group mb-0">
-                        <label class="item-label">Quantity</label>
-                        <input type="number" name="items[${itemIndex}].quantity" placeholder="Qty" required oninput="calculateInvoiceTotal()"
-                            class="btn btn-secondary item-qty text-left-btn text-sm" />
-                    </div>
-                    <div class="form-group mb-0">
-                        <label class="item-label">Price ($)</label>
-                        <input type="number" step="0.01" name="items[${itemIndex}].unitPrice" placeholder="Price" required oninput="calculateInvoiceTotal()"
-                            class="btn btn-secondary item-price text-left-btn text-sm" />
-                    </div>
-                </div>
-            `;
-            container.appendChild(row);
-            itemIndex++;
-        }
-
-        function calculateInvoiceTotal() {
-            let total = 0;
-            const rows = document.querySelectorAll('.invoice-item-row');
-            rows.forEach(row => {
-                const qty = row.querySelector('.item-qty').value || 0;
-                const price = row.querySelector('.item-price').value || 0;
-                total += (parseFloat(qty) * parseFloat(price));
-            });
-            document.getElementById('invoiceTotalAmount').value = total.toFixed(2);
-        }
-
-        function openAddMoneyModal(userId, userName) {
-            document.getElementById('addMoneyUserId').value = userId;
-            document.getElementById('addMoneyUserName').innerText = userName;
-            openModal('addMoneyModal');
-        }
-    </script>
-
-    <div id="addMoneyModal" class="modal">
-        <div class="modal-content">
-            <h3>Admin Deposit</h3>
-            <p class="mb-1 text-secondary">Adding money to: <span id="addMoneyUserName"
-                    class="text-primary font-600"></span></p>
-            <form th:action="@{/admin/add-money}" method="post">
-                <input type="hidden" name="userId" id="addMoneyUserId" />
-                <div class="form-group">
-                    <label>Amount to Credit ($)</label>
-                    <input type="number" step="0.01" name="amount" required class="btn btn-secondary text-left-btn" />
-                </div>
-                <button type="submit" class="btn btn-primary w-full mt-1">Confirm
-                    Deposit</button>
-                <button type="button" onclick="closeModal('addMoneyModal')"
-                    class="btn btn-secondary w-full mt-05 border-none">Cancel</button>
-            </form>
-        </div>
-    </div>
+    <script th:src="@{/js/dashboard.js}"></script>
 </body>
 
 </html>

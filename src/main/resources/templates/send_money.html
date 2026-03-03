@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/layout :: headFragment('Funds Transfer | RevPay')}"></div>
+</head>
+
+<body>
+    <div th:replace="~{fragments/layout :: headerFragment}"></div>
+
+    <div class="main-content">
+        <div style="margin-bottom: 32px;">
+            <h1 style="font-weight: 600; font-size: 1.8rem; margin: 0;">Funds Transfer</h1>
+            <p style="color: var(--text-muted); font-size: 0.875rem;">Execute secure peer-to-peer or corporate
+                disbursements.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+            <div class="card" style="padding: 32px;">
+                <div class="card-title" style="margin-bottom: 24px;">Transaction Configuration</div>
+
+                <form id="sendMoneyForm" onsubmit="event.preventDefault(); handleSendMoney();">
+                    <!-- Funding Source Selector -->
+                    <div class="form-group" id="paymentMethodGroup">
+                        <label>Funding Source</label>
+                        <select id="paymentMethodSelect" required>
+                            <option value="" disabled selected>Synchronizing funding sources...</option>
+                        </select>
+                        <p style="margin-top: 4px; font-size: 0.75rem; color: var(--text-muted);">Select a provisioned
+                            instrument for this disbursement.</p>
+                    </div>
+
+                    <div style="height: 1px; background: var(--border-color); margin: 32px 0;"></div>
+
+                    <div class="form-group">
+                        <label>Recipient Primary Identifier</label>
+                        <input type="text" id="recipientIdentifier" required placeholder="Email, Phone, or System ID">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group">
+                            <label>Transaction Amount (USD)</label>
+                            <input type="number" id="amount" step="0.01" min="0.01" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Security PIN</label>
+                            <input type="password" id="pin" required maxlength="6"
+                                placeholder="6-digit authorization PIN">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Reference / Memo (Optional)</label>
+                        <input type="text" id="description" placeholder="Internal reference or purpose">
+                    </div>
+
+                    <div id="errorMessage" class="error"
+                        style="display:none; margin-bottom: 24px; padding: 12px; border-radius: 6px; font-size: 0.875rem;">
+                    </div>
+
+                    <div id="pinHelpMsg"
+                        style="display:none; margin-bottom: 24px; padding: 16px; background: var(--bg-color); border-left: 4px solid var(--accent-color); border-radius: 6px; font-size: 0.875rem;">
+                        <p style="margin: 0; font-weight: 600; color: var(--primary-color);">Authorization PIN Required
+                        </p>
+                        <p style="margin: 4px 0 0 0; color: var(--text-secondary);">If you have not initialized a
+                            security PIN, please visit <a href="/settings"
+                                style="color: var(--accent-color); font-weight: 600; text-decoration: underline;">Security
+                                Settings</a>.</p>
+                    </div>
+
+                    <div id="successMessage"
+                        style="color: var(--accent-color); font-weight: 600; display:none; margin-bottom: 24px; font-size: 0.875rem; padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 6px;">
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%;">Authorize Transaction</button>
+                </form>
+            </div>
+
+            <!-- Contextual Info / Warnings -->
+            <div id="noCardsWarning" style="display: none;">
+                <div class="card" style="padding: 32px; border-left: 4px solid var(--warning); background: #fefce8;">
+                    <div class="card-title" style="color: #b45309; margin-bottom: 12px;">Missing Funding Source</div>
+                    <p style="color: #92400e; font-size: 0.875rem; margin-bottom: 24px;">No valid funding instruments
+                        found in your profile registry. At least one credit or debit instrument is required for outbound
+                        transfers.</p>
+                    <a href="/payment-methods" class="btn btn-secondary" style="display: inline-block;">Update
+                        Instruments</a>
+                </div>
+            </div>
+
+            <div class="card" style="padding: 32px;">
+                <div class="card-title" style="margin-bottom: 16px;">Transfer Protocols</div>
+                <ul
+                    style="padding: 0; margin: 0; list-style: none; color: var(--text-secondary); font-size: 0.875rem; display: flex; flex-direction: column; gap: 16px;">
+                    <li style="display: flex; gap: 12px;">
+                        <span style="color: var(--primary-color); font-weight: 700;">Secure</span>
+                        <span>All transitions are protected by end-to-end encryption and multi-factor
+                            authorization.</span>
+                    </li>
+                    <li style="display: flex; gap: 12px;">
+                        <span style="color: var(--primary-color); font-weight: 700;">Instant</span>
+                        <span>Funds are typically available to the recipient immediately upon system
+                            confirmation.</span>
+                    </li>
+                    <li style="display: flex; gap: 12px;">
+                        <span style="color: var(--primary-color); font-weight: 700;">Audit</span>
+                        <span>Detailed digital receipts are generated for all corporate and personal
+                            disbursements.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: footerFragment}"></div>
+
+    <script th:src="@{/js/send-money.js}"></script>
+</body>
+
+</html>

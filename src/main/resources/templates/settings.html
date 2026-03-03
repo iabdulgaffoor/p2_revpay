@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/layout :: headFragment('Protocol Configuration | RevPay')}"></div>
+</head>
+
+<body>
+    <div th:replace="~{fragments/layout :: headerFragment}"></div>
+
+    <div class="main-content">
+        <div style="margin-bottom: 40px;">
+            <h1 style="font-weight: 600; font-size: 1.8rem; margin: 0;">Protocol Configuration</h1>
+            <p style="color: var(--text-muted); font-size: 0.875rem;">Manage core identity parameters and security
+                authorization protocols.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: start;">
+            <div style="display: flex; flex-direction: column; gap: 40px;">
+                <!-- Profile Update Section -->
+                <div class="card" style="padding: 40px; border: 1px solid var(--border-color); box-shadow: none;">
+                    <div
+                        style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 32px; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                        Persona Registry Information</div>
+                    <form id="profileForm" onsubmit="event.preventDefault(); updateProfile();">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                            <div class="form-group">
+                                <label>Full Legal Name</label>
+                                <input type="text" id="profFullName" required
+                                    style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                            </div>
+                            <div class="form-group">
+                                <label>Telecommunication No.</label>
+                                <input type="text" id="profPhone" required
+                                    style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 32px;">
+                            <label>Recovery Challenge (Question)</label>
+                            <input type="text" id="profSecurityQuestion" required disabled
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: #f8fafc; color: var(--text-muted); cursor: not-allowed;">
+                            <p
+                                style="margin-top: 8px; font-size: 0.75rem; color: var(--text-muted); font-style: italic;">
+                                Challenges are immutable once registered for system integrity.</p>
+                        </div>
+
+                        <!-- Business Specific Updates -->
+                        <div id="businessUpdateFields"
+                            style="display:none; padding-top: 32px; border-top: 1px solid var(--border-color); margin-top: 32px;">
+                            <div
+                                style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 24px; letter-spacing: 0.05em;">
+                                Entity Registry Configuration</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                                <div class="form-group">
+                                    <label>Registered Entity Name</label>
+                                    <input type="text" id="profBusinessName"
+                                        style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                                </div>
+                                <div class="form-group">
+                                    <label>Industrial Classification</label>
+                                    <input type="text" id="profBusinessType"
+                                        style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 24px;">
+                                <label>Tax Identification Index (TIN)</label>
+                                <input type="text" id="profTaxId"
+                                    style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                            </div>
+                            <div class="form-group">
+                                <label>Official Registered Domicile</label>
+                                <textarea id="profBusinessAddress" rows="2"
+                                    style="width: 100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; font-family: inherit; font-size: 0.9375rem; background: var(--bg-color);"></textarea>
+                            </div>
+                        </div>
+
+                        <div id="profileMsg" style="margin-bottom: 24px; font-size: 0.8125rem; text-align: center;">
+                        </div>
+                        <button type="submit" class="btn" style="width: 100%; padding: 14px;">Synchronize
+                            Registry</button>
+                    </form>
+                </div>
+
+                <!-- Transaction PIN Section -->
+                <div class="card" style="padding: 40px; border: 1px solid var(--border-color); box-shadow: none;">
+                    <div
+                        style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 32px; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                        Disbursement Authorization PIN</div>
+                    <form id="pinForm" onsubmit="event.preventDefault(); updatePin();">
+                        <div class="form-group">
+                            <label>Configure 6-digit Protocol PIN</label>
+                            <input type="password" id="newPin" required maxlength="6" pattern="\d{6}"
+                                placeholder="••••••"
+                                style="width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color); font-size: 1.5rem; letter-spacing: 0.5em; text-align: center;">
+                            <p
+                                style="margin-top: 12px; font-size: 0.75rem; color: var(--text-muted); line-height: 1.6;">
+                                Mandatory for all outbound financial authorizations and registry settlements.</p>
+                        </div>
+                        <div id="pinMsg" style="margin-bottom: 24px; font-size: 0.8125rem; text-align: center;"></div>
+                        <button type="submit" class="btn" style="width: 100%; padding: 14px;">Update Authorization
+                            Profile</button>
+                    </form>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 40px;">
+                <!-- Password Update Section -->
+                <div class="card" style="padding: 40px; border: 1px solid var(--border-color); box-shadow: none;">
+                    <div
+                        style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: var(--primary-color); margin-bottom: 32px; letter-spacing: 0.1em; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                        Security Credentials</div>
+                    <form id="passwordForm" onsubmit="event.preventDefault(); updatePassword();">
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label>Primary Credential Verification</label>
+                            <input type="password" id="currentPassword" required placeholder="Verify current credential"
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 24px;">
+                            <label>New Security Credential</label>
+                            <input type="password" id="newPassword" required placeholder="Minimum 8 characters"
+                                style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-color);">
+                        </div>
+                        <div id="passMsg" style="margin-bottom: 24px; font-size: 0.8125rem; text-align: center;"></div>
+                        <button type="submit" class="btn" style="width: 100%; padding: 14px;">Authorize Credential
+                            Update</button>
+                    </form>
+                </div>
+
+                <!-- Security Info -->
+                <div class="card"
+                    style="padding: 40px; background: var(--primary-color); color: white; border: none; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
+                    <div
+                        style="font-weight: 700; font-size: 0.75rem; text-transform: uppercase; color: rgba(255,255,255,0.8); margin-bottom: 16px; letter-spacing: 0.1em;">
+                        Security Protocol Policy</div>
+                    <p style="font-size: 0.875rem; opacity: 0.9; line-height: 1.7; margin-bottom: 32px;">RevPay
+                        implements SOC2-compliant encryption layer. Maintain absolute confidentiality of your Protocol
+                        PIN and Security Credentials.</p>
+                    <div style="height: 1px; background: rgba(255,255,255,0.1); margin-bottom: 24px;"></div>
+                    <div style="font-size: 0.75rem; opacity: 0.6; display: flex; align-items: center; gap: 8px;">
+                        <span
+                            style="width: 6px; height: 6px; background: var(--accent-color); border-radius: 50%;"></span>
+                        Last synchronized: <span id="syncDate">---</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: footerFragment}"></div>
+
+    <script th:src="@{/js/settings.js}"></script>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="~{fragments/layout :: headFragment('Billing Records Registry | RevPay')}"></div>
+</head>
+
+<body>
+    <div th:replace="~{fragments/layout :: headerFragment}"></div>
+
+    <div class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px;">
+            <div>
+                <h1 style="font-weight: 600; font-size: 1.8rem; margin: 0;">Billing Records Registry</h1>
+                <p style="color: var(--text-muted); font-size: 0.875rem;">Comprehensive oversight of client
+                    solicitations and settlement statuses.</p>
+            </div>
+            <a href="/invoice/create" class="btn">Initialize New Statement</a>
+        </div>
+
+        <div class="card"
+            style="padding: 0; overflow: hidden; border: 1px solid var(--border-color); box-shadow: none;">
+            <div id="loader" style="text-align:center; padding: 60px; color: var(--text-muted);">
+                <div style="font-size: 0.875rem;">Synchronizing billing ledger records...</div>
+            </div>
+
+            <div id="invoiceContainer" style="display:none;">
+                <table class="transaction-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th
+                                style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border-color);">
+                                Reference ID</th>
+                            <th
+                                style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border-color);">
+                                Client Entity</th>
+                            <th
+                                style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border-color);">
+                                Settlement Deadline</th>
+                            <th
+                                style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border-color);">
+                                Aggregate Amount</th>
+                            <th
+                                style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border-color);">
+                                Ledger Status</th>
+                            <th
+                                style="padding: 16px 24px; text-align: right; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 2px solid var(--border-color);">
+                                Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoiceBody">
+                        <!-- System Populated -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="errorMsg" class="error" style="display:none; margin: 24px; padding: 16px; border-radius: 8px;">
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: footerFragment}"></div>
+
+    <script th:src="@{/js/invoices.js}"></script>
+</body>
+
+</html>
