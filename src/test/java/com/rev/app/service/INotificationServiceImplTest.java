@@ -19,7 +19,6 @@ import com.rev.app.dto.NotificationDTO;
 import com.rev.app.entity.Notification;
 import com.rev.app.entity.Notification.NotificationType;
 import com.rev.app.entity.User;
-import com.rev.app.exception.ResourceNotFoundException;
 import com.rev.app.mapper.NotificationMapper;
 import com.rev.app.repository.INotificationRepository;
 import com.rev.app.repository.IUserRepository;
@@ -47,8 +46,6 @@ class INotificationServiceImplTest {
     void setUp() {
         user = new User();
         user.setId(1L);
-        user.setTransactionAlerts(true);
-        user.setSecurityAlerts(true);
 
         notification = new Notification();
         notification.setId(40L);
@@ -66,21 +63,11 @@ class INotificationServiceImplTest {
         when(notificationRepository.save(any(Notification.class))).thenReturn(notification);
         when(notificationMapper.toDTO(any(Notification.class))).thenReturn(notificationDTO);
 
-        NotificationDTO result = notificationService.createNotification(1L, "Test message", NotificationType.TRANSACTION);
+        NotificationDTO result = notificationService.createNotification(1L, "Test message",
+                NotificationType.TRANSACTION);
 
         assertNotNull(result);
         verify(notificationRepository).save(any(Notification.class));
-    }
-
-    @Test
-    void createNotification_PreferencesDisabled_ReturnsNull() {
-        user.setTransactionAlerts(false);
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-
-        NotificationDTO result = notificationService.createNotification(1L, "Test message", NotificationType.TRANSACTION);
-
-        assertNull(result);
-        verify(notificationRepository, never()).save(any());
     }
 
     @Test

@@ -2,177 +2,148 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <div th:replace="~{fragments/layout :: headFragment('RevPay — Modern Payment Platform')}"></div>
+    <div th:replace="~{fragments/layout :: headFragment('RevPay - Unified Payment Command Center')}"></div>
     <link rel="stylesheet" th:href="@{/css/index.css}">
 </head>
 
 <body>
     <div th:replace="~{fragments/layout :: headerFragment}"></div>
 
-    <div class="main-content" style="max-width: 960px;">
+    <main class="main-content">
+        <div class="landing-shell">
+            <section class="hero">
+                <div class="hero-headline">
+                    <span class="hero-eyebrow">RevPay Platform</span>
+                    <h1>Run personal and business payments from one command center.</h1>
+                    <p>RevPay combines wallet controls, transfers, invoices, requests, and alerts into one connected financial workspace.</p>
+                </div>
+                <div class="hero-actions">
+                    <a th:href="@{/register}" class="btn">Open New Account</a>
+                    <a th:href="@{/login}" class="btn btn-secondary">Sign In</a>
+                </div>
+                <div class="trust-bar">
+                    <span class="trust-pill">End-to-end security</span>
+                    <span class="trust-pill">Fast settlements</span>
+                    <span class="trust-pill">Role-based access</span>
+                    <span class="trust-pill">Unified reporting</span>
+                </div>
+            </section>
 
-        <!-- Hero -->
-        <div class="hero">
-            <h1>Business payments,<br>simplified.</h1>
-            <p>RevPay is a full-stack financial platform for individuals and businesses. Send money, receive payments,
-                manage invoices, and track every transaction — all in one place.</p>
-            <div class="hero-actions">
-                <a th:href="@{/register}" class="btn" style="padding: 12px 28px;">Create Free Account</a>
-                <a th:href="@{/login}" class="btn btn-secondary" style="padding: 12px 28px;">Sign In</a>
-            </div>
-            <div class="trust-bar">
-                <span><span class="trust-dot"></span> Bank-grade encryption</span>
-                <span><span class="trust-dot"></span> Real-time transfers</span>
-                <span><span class="trust-dot"></span> Multi-role access</span>
-                <span><span class="trust-dot"></span> Free to use</span>
-            </div>
-        </div>
+            <section class="overview-grid">
+                <div class="section-panel">
+                    <div class="section-label">Capabilities</div>
+                    <h2 class="section-title">Core modules powering every transaction</h2>
+                    <div class="features-grid">
+                        <article class="feature-card">
+                            <h3>Wallet Engine</h3>
+                            <p>Load funds, monitor balance, and handle withdrawals from a single wallet.</p>
+                        </article>
+                        <article class="feature-card">
+                            <h3>Peer Transfers</h3>
+                            <p>Send money using email or phone with verification and status tracking.</p>
+                        </article>
+                        <article class="feature-card">
+                            <h3>Invoice Suite</h3>
+                            <p>Create and monitor invoices with itemized lines and lifecycle status.</p>
+                        </article>
+                        <article class="feature-card">
+                            <h3>Live Alerts</h3>
+                            <p>Track account activity with real-time notifications for every major event.</p>
+                        </article>
+                    </div>
+                    <div class="stats-banner">
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">User Roles</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">6+</div>
+                            <div class="stat-label">Product Modules</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">CSV</div>
+                            <div class="stat-label">Data Export</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">Realtime</div>
+                            <div class="stat-label">Activity Feed</div>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Features -->
-        <div class="features-section">
-            <div class="section-label">Platform Capabilities</div>
-            <div class="section-title">Everything you need to move money</div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">💳</div>
-                    <h3>Digital Wallet</h3>
-                    <p>Add funds, withdraw, and maintain your balance. Your wallet is your central account for all
-                        RevPay operations.</p>
+                <div class="section-panel">
+                    <div class="section-label">Quick Start</div>
+                    <h2 class="section-title">Go live in four steps</h2>
+                    <div class="steps-list">
+                        <article class="step-item">
+                            <span class="step-number">1</span>
+                            <div>
+                                <h4>Create Account</h4>
+                                <p>Register as Personal or Business and complete verification.</p>
+                            </div>
+                        </article>
+                        <article class="step-item">
+                            <span class="step-number">2</span>
+                            <div>
+                                <h4>Fund Wallet</h4>
+                                <p>Add payment methods and initialize your account balance.</p>
+                            </div>
+                        </article>
+                        <article class="step-item">
+                            <span class="step-number">3</span>
+                            <div>
+                                <h4>Run Transactions</h4>
+                                <p>Send payments, request money, and generate invoices.</p>
+                            </div>
+                        </article>
+                        <article class="step-item">
+                            <span class="step-number">4</span>
+                            <div>
+                                <h4>Monitor Activity</h4>
+                                <p>Review ledgers, notifications, and analytics dashboards.</p>
+                            </div>
+                        </article>
+                    </div>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">↗️</div>
-                    <h3>Instant Transfers</h3>
-                    <p>Send money to any registered user by email or phone. Transactions settle instantly with PIN
-                        verification.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📄</div>
-                    <h3>Invoicing</h3>
-                    <p>Create, send, and manage professional invoices. Itemized line items, tax support, and real-time
-                        status tracking.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔔</div>
-                    <h3>Notifications</h3>
-                    <p>Get real-time alerts for incoming payments, money requests, invoice updates, and account
-                        activity.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Analytics</h3>
-                    <p>Business accounts get a dedicated analytics dashboard with inflow/outflow tracking and visual
-                        reports.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🏦</div>
-                    <h3>Loan Applications</h3>
-                    <p>Business users can apply for credit facilities with transparent interest calculations and
-                        approval tracking.</p>
-                </div>
-            </div>
-        </div>
+            </section>
 
-        <!-- How It Works -->
-        <div class="steps-section">
-            <div class="section-label">Getting Started</div>
-            <div class="section-title">Up and running in 4 steps</div>
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <h4>Register</h4>
-                    <p>Create a Personal or Business account with email verification via OTP.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <h4>Fund Wallet</h4>
-                    <p>Add a payment method and load your wallet with funds to get started.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <h4>Transact</h4>
-                    <p>Send payments, request money, or generate invoices for your clients.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-number">4</div>
-                    <h4>Track</h4>
-                    <p>Monitor all activity through your dashboard with full transaction history and CSV export.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats-section">
-            <div class="stats-grid">
-                <div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-label">User Roles</div>
-                </div>
-                <div>
-                    <div class="stat-value">6+</div>
-                    <div class="stat-label">Core Modules</div>
-                </div>
-                <div>
-                    <div class="stat-value">Real-time</div>
-                    <div class="stat-label">Notifications</div>
-                </div>
-                <div>
-                    <div class="stat-value">CSV</div>
-                    <div class="stat-label">Export Support</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- User Roles -->
-        <div class="roles-section">
-            <div class="section-label">Built for Everyone</div>
-            <div class="section-title">Three roles, one platform</div>
-            <div class="roles-grid">
-                <div class="role-card">
-                    <h3>👤 Personal</h3>
+            <section class="roles-grid">
+                <article class="role-card">
+                    <h3>Personal Workspace</h3>
                     <ul>
-                        <li>Send & receive money</li>
-                        <li>Manage wallet balance</li>
-                        <li>Request payments from others</li>
-                        <li>Add payment methods (cards)</li>
-                        <li>View transaction history</li>
-                        <li>Change password & set PIN</li>
+                        <li>Transfers and payment requests</li>
+                        <li>Wallet and card management</li>
+                        <li>Security settings and profile controls</li>
                     </ul>
-                </div>
-                <div class="role-card">
-                    <h3>🏢 Business</h3>
+                </article>
+                <article class="role-card">
+                    <h3>Business Workspace</h3>
                     <ul>
-                        <li>Everything in Personal, plus:</li>
-                        <li>Create & manage invoices</li>
-                        <li>Apply for business loans</li>
-                        <li>Revenue analytics dashboard</li>
-                        <li>Outstanding receivables tracking</li>
-                        <li>Business verification status</li>
+                        <li>Invoice and receivables workflows</li>
+                        <li>Loan applications and status tracking</li>
+                        <li>Revenue and outflow analytics</li>
                     </ul>
-                </div>
-                <div class="role-card">
-                    <h3>🛡️ Admin</h3>
+                </article>
+                <article class="role-card">
+                    <h3>Admin Workspace</h3>
                     <ul>
-                        <li>View all registered users</li>
-                        <li>Activate / deactivate accounts</li>
-                        <li>Verify business entities</li>
-                        <li>Adjust user wallet balances</li>
-                        <li>Platform-wide metrics</li>
-                        <li>System health monitoring</li>
+                        <li>User lifecycle and verification management</li>
+                        <li>Balance adjustment and platform oversight</li>
+                        <li>System monitoring and governance</li>
                     </ul>
-                </div>
-            </div>
-        </div>
+                </article>
+            </section>
 
-        <!-- CTA -->
-        <div class="cta-section">
-            <h2>Ready to get started?</h2>
-            <p>Create your account in under a minute. No fees, no catches.</p>
-            <div class="hero-actions">
-                <a th:href="@{/register}" class="btn" style="padding: 12px 32px;">Create Account</a>
-                <a th:href="@{/login}" class="btn btn-secondary" style="padding: 12px 32px;">Sign In</a>
-            </div>
+            <section class="cta-section">
+                <h2>Build your payment workflow in minutes</h2>
+                <p>Start free and move all your money operations into one platform.</p>
+                <div class="hero-actions" style="justify-content: center; margin-top: 0;">
+                    <a th:href="@{/register}" class="btn">Create Account</a>
+                    <a th:href="@{/login}" class="btn btn-secondary">Sign In</a>
+                </div>
+            </section>
         </div>
-    </div>
+    </main>
 
     <div th:replace="~{fragments/layout :: footerFragment}"></div>
 

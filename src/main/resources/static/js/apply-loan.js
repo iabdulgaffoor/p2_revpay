@@ -48,9 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok) {
                     const data = await res.json();
                     document.getElementById('simResults').style.display = 'block';
-                    document.getElementById('resEmi').innerText = `USD ${data.monthlyEMI.toFixed(2)}`;
-                    document.getElementById('resInterest').innerText = `USD ${data.totalInterest.toFixed(2)}`;
-                    document.getElementById('resTotal').innerText = `USD ${data.totalPayment.toFixed(2)}`;
+                    document.getElementById('resEmi').innerText = `INR ${data.monthlyEMI.toFixed(2)}`;
+                    document.getElementById('resInterest').innerText = `INR ${data.totalInterest.toFixed(2)}`;
+                    document.getElementById('resTotal').innerText = `INR ${data.totalPayment.toFixed(2)}`;
                 } else {
                     alert("Assessment failure.");
                 }
@@ -58,3 +58,4 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error(err);
             }
         }
+

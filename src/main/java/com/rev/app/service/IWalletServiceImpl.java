@@ -31,16 +31,15 @@ public class IWalletServiceImpl implements IWalletService {
     private final IUserRepository userRepository;
     private final WalletMapper walletMapper;
     private final ITransactionRepository transactionRepository;
-    private final IEmailService emailService;
 
     @Autowired
-    public IWalletServiceImpl(IWalletRepository walletRepository, IUserRepository userRepository, WalletMapper walletMapper,
-                              ITransactionRepository transactionRepository, IEmailService emailService) {
+    public IWalletServiceImpl(IWalletRepository walletRepository, IUserRepository userRepository,
+            WalletMapper walletMapper,
+            ITransactionRepository transactionRepository) {
         this.walletRepository = walletRepository;
         this.userRepository = userRepository;
         this.walletMapper = walletMapper;
         this.transactionRepository = transactionRepository;
-        this.emailService = emailService;
     }
 
     @Override
@@ -55,7 +54,7 @@ public class IWalletServiceImpl implements IWalletService {
 
         Wallet wallet = new Wallet(user);
         wallet.setBalance(BigDecimal.ZERO);
-        
+
         return walletMapper.toDTO(walletRepository.save(wallet));
     }
 
@@ -69,20 +68,20 @@ public class IWalletServiceImpl implements IWalletService {
     }
 
     @Override
-    @Transactional(noRollbackFor = {IllegalArgumentException.class})
+    @Transactional(noRollbackFor = { IllegalArgumentException.class })
     @Caching(evict = {
-        @CacheEvict(value = "wallets", key = "#userId"),
-        @CacheEvict(value = "analytics", key = "#userId")
+            @CacheEvict(value = "wallets", key = "#userId"),
+            @CacheEvict(value = "analytics", key = "#userId")
     })
     public WalletDTO addFunds(Long userId, BigDecimal amount, Long paymentMethodId) {
         log.info("Adding {} funds to wallet for user ID: {}", amount, userId);
-        
+
         Wallet wallet = walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for user: " + userId));
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             log.error("Failed to add funds: Amount must be greater than zero for user ID: {}", userId);
-            
+
             // Record Transaction
             Transaction tx = new Transaction();
             tx.setSender(wallet.getUser());
@@ -92,13 +91,13 @@ public class IWalletServiceImpl implements IWalletService {
             tx.setStatus(TransactionStatus.FAILED);
             tx.setNote("Failed: Amount must be greater than zero");
             transactionRepository.saveAndFlush(tx);
-            
+
             throw new IllegalArgumentException("Amount must be greater than zero");
         }
 
-        // Logic to simulate pulling from paymentMethodId goes here. 
+        // Logic to simulate pulling from paymentMethodId goes here.
         // We assume success for the simulation.
-        
+
         wallet.setBalance(wallet.getBalance().add(amount));
         Wallet savedWallet = walletRepository.save(wallet);
 
@@ -111,28 +110,25 @@ public class IWalletServiceImpl implements IWalletService {
         tx.setStatus(TransactionStatus.COMPLETED);
         tx.setNote("Added funds via payment method");
         transactionRepository.save(tx);
-        
-        emailService.sendTransactionNotification(wallet.getUser().getEmail(), 
-                "You have successfully added " + amount + " to your wallet.");
 
         return walletMapper.toDTO(savedWallet);
     }
 
     @Override
-    @Transactional(noRollbackFor = {InsufficientFundsException.class, IllegalArgumentException.class})
+    @Transactional(noRollbackFor = { InsufficientFundsException.class, IllegalArgumentException.class })
     @Caching(evict = {
-        @CacheEvict(value = "wallets", key = "#userId"),
-        @CacheEvict(value = "analytics", key = "#userId")
+            @CacheEvict(value = "wallets", key = "#userId"),
+            @CacheEvict(value = "analytics", key = "#userId")
     })
     public WalletDTO withdrawFunds(Long userId, BigDecimal amount, Long paymentMethodId) {
         log.info("Withdrawing {} funds from wallet for user ID: {}", amount, userId);
-        
+
         Wallet wallet = walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for user: " + userId));
 
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             log.error("Failed to withdraw funds: Amount must be greater than zero for user ID: {}", userId);
-            
+
             Transaction tx = new Transaction();
             tx.setSender(wallet.getUser());
             tx.setRecipient(wallet.getUser());
@@ -146,8 +142,9 @@ public class IWalletServiceImpl implements IWalletService {
         }
 
         if (wallet.getBalance().compareTo(amount) < 0) {
-            log.warn("Failed to withdraw funds: Insufficient funds {} for withdrawal of {}", wallet.getBalance(), amount);
-            
+            log.warn("Failed to withdraw funds: Insufficient funds {} for withdrawal of {}", wallet.getBalance(),
+                    amount);
+
             Transaction tx = new Transaction();
             tx.setSender(wallet.getUser());
             tx.setRecipient(wallet.getUser());
@@ -161,7 +158,7 @@ public class IWalletServiceImpl implements IWalletService {
         }
 
         // Logic to simulate pushing to bank account goes here.
-        
+
         wallet.setBalance(wallet.getBalance().subtract(amount));
         Wallet savedWallet = walletRepository.save(wallet);
 
@@ -174,9 +171,6 @@ public class IWalletServiceImpl implements IWalletService {
         tx.setStatus(TransactionStatus.COMPLETED);
         tx.setNote("Withdrawn funds to payment method");
         transactionRepository.save(tx);
-        
-        emailService.sendTransactionNotification(wallet.getUser().getEmail(), 
-                "You have successfully withdrawn " + amount + " from your wallet.");
 
         return walletMapper.toDTO(savedWallet);
     }
@@ -184,12 +178,12 @@ public class IWalletServiceImpl implements IWalletService {
     @Override
     @Transactional
     @Caching(evict = {
-        @CacheEvict(value = "wallets", key = "#userId"),
-        @CacheEvict(value = "analytics", key = "#userId")
+            @CacheEvict(value = "wallets", key = "#userId"),
+            @CacheEvict(value = "analytics", key = "#userId")
     })
     public WalletDTO adminAddFunds(Long userId, BigDecimal amount) {
         log.info("Admin adding {} funds to wallet for user ID: {}", amount, userId);
-        
+
         Wallet wallet = walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for user: " + userId));
 
@@ -209,9 +203,6 @@ public class IWalletServiceImpl implements IWalletService {
         tx.setStatus(TransactionStatus.COMPLETED);
         tx.setNote("Funds added by Administrator");
         transactionRepository.save(tx);
-        
-        emailService.sendTransactionNotification(wallet.getUser().getEmail(), 
-                "An administrator has added " + amount + " to your wallet.");
 
         return walletMapper.toDTO(savedWallet);
     }
@@ -219,12 +210,12 @@ public class IWalletServiceImpl implements IWalletService {
     @Override
     @Transactional
     @Caching(evict = {
-        @CacheEvict(value = "wallets", key = "#userId"),
-        @CacheEvict(value = "analytics", key = "#userId")
+            @CacheEvict(value = "wallets", key = "#userId"),
+            @CacheEvict(value = "analytics", key = "#userId")
     })
     public WalletDTO adminDeductFunds(Long userId, BigDecimal amount) {
         log.info("Admin deducting {} funds from wallet for user ID: {}", amount, userId);
-        
+
         Wallet wallet = walletRepository.findByUserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Wallet not found for user: " + userId));
 
@@ -235,7 +226,7 @@ public class IWalletServiceImpl implements IWalletService {
         if (wallet.getBalance().compareTo(amount) < 0) {
             throw new InsufficientFundsException("User has insufficient funds for admin deduction: " + amount);
         }
-        
+
         wallet.setBalance(wallet.getBalance().subtract(amount));
         Wallet savedWallet = walletRepository.save(wallet);
 
@@ -248,9 +239,6 @@ public class IWalletServiceImpl implements IWalletService {
         tx.setStatus(TransactionStatus.COMPLETED);
         tx.setNote("Funds deducted by Administrator");
         transactionRepository.save(tx);
-        
-        emailService.sendTransactionNotification(wallet.getUser().getEmail(), 
-                "An administrator has deducted " + amount + " from your wallet.");
 
         return walletMapper.toDTO(savedWallet);
     }

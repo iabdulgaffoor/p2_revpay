@@ -5,23 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" th:href="@{/img/favicon.png}">
-    <title th:text="${title}">RevPay | Enterprise Financial Protocol</title>
+    <title th:text="${title}">RevPay | Unified Payment Operations</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script th:src="@{/js/app.js}"></script>
 </head>
 
 <body>
-    <!-- Global Loading Overlay -->
     <div id="globalLoader" class="loader-overlay" style="display: none;">
         <div class="spinner"></div>
     </div>
 
-    <!-- Top Header -->
     <header th:fragment="headerFragment">
         <div class="logo">
             <a th:href="@{/}" id="navHome">RevPay</a>
         </div>
-        <div class="nav-links">
+        <nav class="nav-links">
             <span id="authenticatedLinks" style="display:none;">
                 <a th:href="@{/dashboard}" id="navDashboard">Dashboard</a>
                 <a th:href="@{/transaction/history}" id="navTransactions">Transactions</a>
@@ -41,15 +39,13 @@
                 <a th:href="@{/login}" id="loginLink">Login</a>
                 <a th:href="@{/register}" id="registerLink">Register</a>
             </span>
-        </div>
+        </nav>
     </header>
 
-    <!-- Sidebar removed, links moved to navbar -->
     <div th:fragment="sidebarFragment" style="display:none;"></div>
 
-    <!-- Footer -->
     <footer th:fragment="footerFragment">
-        <p>&copy; 2026 RevPay Financial Services</p>
+        <p>&copy; 2026 RevPay Financial Platform</p>
     </footer>
 </body>
 

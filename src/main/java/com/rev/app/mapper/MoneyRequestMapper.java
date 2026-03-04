@@ -29,6 +29,10 @@ public class MoneyRequestMapper {
             dto.setRequesteeName(moneyRequest.getRequestee().getFullName());
         }
 
+        if (moneyRequest.getInvoice() != null) {
+            dto.setInvoiceId(moneyRequest.getInvoice().getId());
+        }
+
         return dto;
     }
 
@@ -44,7 +48,8 @@ public class MoneyRequestMapper {
         moneyRequest.setStatus(dto.getStatus());
         moneyRequest.setCreatedAt(dto.getCreatedAt());
 
-        // Note: User objects (Requester/Requestee) must be explicitly set by the Service layer
+        // Note: User objects (Requester/Requestee) must be explicitly set by the
+        // Service layer
 
         return moneyRequest;
     }

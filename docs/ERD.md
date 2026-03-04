@@ -1,56 +1,61 @@
 # Entity Relationship Diagram (ERD)
 
-The following diagram illustrates the relational database schema for RevPay, mapped using JPA/Hibernate.
+The following diagram illustrates the database structure and relationships between core entities in RevPay.
 
 ```mermaid
 erDiagram
-    USERS ||--o| PERSONAL_USERS : "is a"
-    USERS ||--o| BUSINESS_USERS : "is a"
-    USERS ||--|| WALLETS : "owns"
-    USERS ||--o{ PAYMENT_METHODS : "manages"
-    USERS ||--o{ NOTIFICATIONS : "receives"
+    REV_USERS ||--|| WALLETS : "has"
+    REV_USERS ||--o{ TRANSACTIONS : "sends/receives"
+    REV_USERS ||--o{ MONEY_REQUESTS : "requests/is_requested_by"
+    REV_USERS ||--o{ NOTIFICATIONS : "receives"
+    REV_USERS ||--o{ PAYMENT_METHODS : "owns"
     
-    PERSONAL_USERS ||--o{ INVOICES : "receives"
-    BUSINESS_USERS ||--o{ INVOICES : "issues"
-    BUSINESS_USERS ||--o{ LOANS : "applies for"
-    
-    INVOICES ||--o{ INVOICE_ITEMS : "contains"
-    
+    REV_USERS {
+        long id PK
+        string full_name
+        string email UK
+        string phone_number UK
+        string password
+        string role "PERSONAL | BUSINESS | ADMIN"
+        string business_name
+        string business_type
+        string tax_id
+        boolean is_business_verified
+        boolean is_active
+    }
+
+    WALLETS {
+        long id PK
+        decimal balance
+        long user_id FK
+    }
+
     TRANSACTIONS {
-        long id
+        long id PK
+        long sender_id FK
+        long recipient_id FK
         decimal amount
+        string type "SEND|REQUEST|ADD_FUNDS|WITHDRAW|PAYMENT"
+        string status "PENDING|COMPLETED|FAILED|CANCELLED"
+        datetime timestamp
         string note
-        string type
-        string status
+    }
+
+    MONEY_REQUESTS {
+        long id PK
+        long requester_id FK
+        long requestee_id FK
+        decimal amount
+        string status "PENDING|ACCEPTED|DECLINED|CANCELLED"
+        datetime created_at
+        string purpose
+    }
+
+    NOTIFICATIONS {
+        long id PK
+        long user_id FK
+        string content
+        boolean is_read
         datetime created_at
     }
-    
-    USERS ||--o{ TRANSACTIONS : "sender/receiver"
-    
-    LOANS {
-        long id
-        decimal amount
-        string purpose
-        int tenure
-        string status
-    }
-    
-    MONEY_REQUESTS {
-        long id
-        decimal amount
-        string status
-    }
-    
-    USERS ||--o{ MONEY_REQUESTS : "requester/receiver"
 ```
-
-## Core Tables
-1.  **USERS (users):** Base authentication table (Email, Password, Role).
-2.  **PERSONAL_USERS (personal_users):** Extended profile for individuals.
-3.  **BUSINESS_USERS (business_users):** Extended profile for companies (Tax ID, Business Type).
-4.  **WALLETS (wallets):** Holds user balances.
-5.  **TRANSACTIONS (transactions):** Central ledger for all money movements.
-6.  **INVOICES (invoices):** B2C billing records.
-7.  **LOANS (loans):** Small business credit applications.
-8.  **PAYMENT_METHODS (payment_methods):** Tokenized card information.
-9.  **NOTIFICATIONS (notifications):** User alert history.

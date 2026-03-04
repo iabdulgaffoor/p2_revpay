@@ -14,7 +14,7 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLDelete(sql = "UPDATE rev_users SET deleted = true WHERE id=?")
 @SQLRestriction("deleted = false")
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends Auditable {
@@ -48,7 +48,7 @@ public class User extends Auditable {
     private String transactionPin;
 
     private String twoFactorOtp;
-    
+
     private java.time.LocalDateTime twoFactorOtpExpiry;
 
     @Enumerated(EnumType.STRING)
@@ -65,17 +65,4 @@ public class User extends Auditable {
     // Account Status
     @Column(nullable = true, columnDefinition = "number(1,0) default 1")
     private Boolean isActive = true;
-
-    // Notification Preferences
-    private Boolean transactionAlerts = true;
-
-    private Boolean securityAlerts = true;
-
-    public boolean isTransactionAlerts() {
-        return Boolean.TRUE.equals(transactionAlerts);
-    }
-
-    public boolean isSecurityAlerts() {
-        return Boolean.TRUE.equals(securityAlerts);
-    }
 }

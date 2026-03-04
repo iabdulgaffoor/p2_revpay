@@ -7,12 +7,12 @@ let currentPage = 0;
         let allUsersData = [];
 
         function formatCurrency(value) {
-            if (value === null || value === undefined) return 'USD 0.00';
+            if (value === null || value === undefined) return 'INR 0.00';
             const num = parseFloat(value);
-            if (num >= 1e9) return 'USD ' + (num / 1e9).toFixed(2) + 'B';
-            if (num >= 1e6) return 'USD ' + (num / 1e6).toFixed(2) + 'M';
-            if (num >= 1000) return 'USD ' + (num / 1e3).toFixed(2) + 'K';
-            return 'USD ' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            if (num >= 1e9) return 'INR ' + (num / 1e9).toFixed(2) + 'B';
+            if (num >= 1e6) return 'INR ' + (num / 1e6).toFixed(2) + 'M';
+            if (num >= 1000) return 'INR ' + (num / 1e3).toFixed(2) + 'K';
+            return 'INR ' + num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
         function handleUserSearch() {
@@ -377,3 +377,5 @@ let currentPage = 0;
                 alert("An error occurred.");
             }
         }
+
+

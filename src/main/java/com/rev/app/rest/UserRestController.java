@@ -64,12 +64,4 @@ public class UserRestController {
         userService.updateTransactionPin(id, request.get("newPin"));
         return ResponseEntity.ok().build();
     }
-
-    @PutMapping("/{id}/preferences")
-    public ResponseEntity<UserDTO> updateNotificationPreferences(@PathVariable Long id, @RequestBody Map<String, Boolean> prefs) {
-        boolean transactionAlerts = prefs.getOrDefault("transactionAlerts", true);
-        boolean securityAlerts = prefs.getOrDefault("securityAlerts", true);
-        
-        return ResponseEntity.ok(userService.updateNotificationPreferences(id, transactionAlerts, securityAlerts));
-    }
 }

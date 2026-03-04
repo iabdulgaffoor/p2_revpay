@@ -8,6 +8,8 @@ import com.rev.app.exception.BadRequestException;
 import com.rev.app.exception.ResourceNotFoundException;
 import com.rev.app.mapper.MoneyRequestMapper;
 import com.rev.app.repository.IMoneyRequestRepository;
+import com.rev.app.repository.IInvoiceRepository;
+import com.rev.app.repository.INotificationRepository;
 import com.rev.app.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,21 +26,31 @@ public class IMoneyRequestServiceImpl implements IMoneyRequestService {
     private final IUserRepository userRepository;
     private final ITransactionService transactionService;
     private final MoneyRequestMapper moneyRequestMapper;
+    private final IInvoiceRepository invoiceRepository;
+    private final INotificationService notificationService;
+    private final INotificationRepository notificationRepository;
 
     @Autowired
-    public IMoneyRequestServiceImpl(IMoneyRequestRepository moneyRequestRepository, 
-                                    IUserRepository userRepository,
-                                    ITransactionService transactionService,
-                                    MoneyRequestMapper moneyRequestMapper) {
+    public IMoneyRequestServiceImpl(IMoneyRequestRepository moneyRequestRepository,
+            IUserRepository userRepository,
+            ITransactionService transactionService,
+            MoneyRequestMapper moneyRequestMapper,
+            IInvoiceRepository invoiceRepository,
+            INotificationService notificationService,
+            INotificationRepository notificationRepository) {
         this.moneyRequestRepository = moneyRequestRepository;
         this.userRepository = userRepository;
         this.transactionService = transactionService;
         this.moneyRequestMapper = moneyRequestMapper;
+        this.invoiceRepository = invoiceRepository;
+        this.notificationService = notificationService;
+        this.notificationRepository = notificationRepository;
     }
 
     @Override
     @Transactional
-    public MoneyRequestDTO sendRequest(Long requesterId, Long requesteeId, BigDecimal amount, String purpose) {
+    public MoneyRequestDTO sendRequest(Long requesterId, Long requesteeId, BigDecimal amount, String purpose,
+            Long invoiceId) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new BadRequestException("Amount must be greater than zero");
         }
@@ -58,7 +70,25 @@ public class IMoneyRequestServiceImpl implements IMoneyRequestService {
         request.setPurpose(purpose);
         request.setStatus(RequestStatus.PENDING);
 
-        return moneyRequestMapper.toDTO(moneyRequestRepository.save(request));
+        if (invoiceId != null) {
+            invoiceRepository.findById(invoiceId).ifPresent(request::setInvoice);
+        }
+
+        MoneyRequest savedRequest = moneyRequestRepository.save(request);
+
+        // Trigger notification for the requestee
+        notificationService.createNotification(
+                requestee.getId(),
+                String.format("%s has requested INR %.2f for %s", requester.getFullName(), amount, purpose),
+                com.rev.app.entity.Notification.NotificationType.MONEY_REQUEST,
+                savedRequest.getId());
+
+        return moneyRequestMapper.toDTO(savedRequest);
+    }
+
+    // Compat method for existing callers
+    public MoneyRequestDTO sendRequest(Long requesterId, Long requesteeId, BigDecimal amount, String purpose) {
+        return sendRequest(requesterId, requesteeId, amount, purpose, null);
     }
 
     @Override
@@ -97,11 +127,34 @@ public class IMoneyRequestServiceImpl implements IMoneyRequestService {
         }
 
         // Fulfill the transaction!
-        // The sender of the transaction is the requestee, paying money to the requester.
-        transactionService.sendMoney(userId, request.getRequester().getId(), request.getAmount(), "Request Accepted: " + request.getPurpose(), pin);
+        // The sender of the transaction is the requestee, paying money to the
+        // requester.
+        transactionService.sendMoney(userId, request.getRequester().getId(), request.getAmount(),
+                "Request Accepted: " + request.getPurpose(), pin);
 
         request.setStatus(RequestStatus.ACCEPTED);
-        return moneyRequestMapper.toDTO(moneyRequestRepository.save(request));
+        MoneyRequest savedRequest = moneyRequestRepository.save(request);
+
+        // If this request was linked to an invoice, mark the invoice as PAID
+        if (savedRequest.getInvoice() != null) {
+            com.rev.app.entity.Invoice invoice = savedRequest.getInvoice();
+            invoice.setStatus(com.rev.app.entity.Invoice.InvoiceStatus.PAID);
+            invoiceRepository.save(invoice);
+        }
+
+        markNotificationAsRead(requestId);
+
+        return moneyRequestMapper.toDTO(savedRequest);
+    }
+
+    private void markNotificationAsRead(Long requestId) {
+        notificationRepository.findAll().stream()
+                .filter(n -> com.rev.app.entity.Notification.NotificationType.MONEY_REQUEST.equals(n.getType()))
+                .filter(n -> requestId.equals(n.getTargetId()))
+                .forEach(n -> {
+                    n.setRead(true);
+                    notificationRepository.save(n);
+                });
     }
 
     @Override
@@ -115,7 +168,19 @@ public class IMoneyRequestServiceImpl implements IMoneyRequestService {
         }
 
         request.setStatus(RequestStatus.DECLINED);
-        return moneyRequestMapper.toDTO(moneyRequestRepository.save(request));
+        MoneyRequest declined = moneyRequestRepository.save(request);
+
+        // Notify the requester that their request was declined
+        String requesteeName = request.getRequestee().getFullName();
+        notificationService.createNotification(
+                request.getRequester().getId(),
+                String.format("%s has declined your request of INR %.2f for %s",
+                        requesteeName, request.getAmount(), request.getPurpose()),
+                com.rev.app.entity.Notification.NotificationType.MONEY_REQUEST,
+                declined.getId());
+
+        markNotificationAsRead(requestId);
+        return moneyRequestMapper.toDTO(declined);
     }
 
     @Override

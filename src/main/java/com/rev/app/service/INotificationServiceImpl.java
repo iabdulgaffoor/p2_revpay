@@ -23,9 +23,9 @@ public class INotificationServiceImpl implements INotificationService {
     private final NotificationMapper notificationMapper;
 
     @Autowired
-    public INotificationServiceImpl(INotificationRepository notificationRepository, 
-                                    IUserRepository userRepository,
-                                    NotificationMapper notificationMapper) {
+    public INotificationServiceImpl(INotificationRepository notificationRepository,
+            IUserRepository userRepository,
+            NotificationMapper notificationMapper) {
         this.notificationRepository = notificationRepository;
         this.userRepository = userRepository;
         this.notificationMapper = notificationMapper;
@@ -33,26 +33,24 @@ public class INotificationServiceImpl implements INotificationService {
 
     @Override
     @Transactional
-    public NotificationDTO createNotification(Long userId, String message, NotificationType type) {
+    public NotificationDTO createNotification(Long userId, String message, NotificationType type, Long targetId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
-
-        // Enforce Notification Preferences
-        if (!user.isTransactionAlerts() && 
-            (type == NotificationType.TRANSACTION || type == NotificationType.MONEY_REQUEST || type == NotificationType.INVOICE)) {
-            return null;
-        }
-        if (!user.isSecurityAlerts() && type == NotificationType.ALERTS) {
-            return null;
-        }
 
         Notification notification = new Notification();
         notification.setUser(user);
         notification.setMessage(message);
         notification.setType(type);
         notification.setRead(false);
+        notification.setTargetId(targetId);
 
         return notificationMapper.toDTO(notificationRepository.save(notification));
+    }
+
+    @Override
+    @Transactional
+    public NotificationDTO createNotification(Long userId, String message, NotificationType type) {
+        return createNotification(userId, message, type, null);
     }
 
     @Override
@@ -60,6 +58,13 @@ public class INotificationServiceImpl implements INotificationService {
         return notificationRepository.findByUserId(userId).stream() // Fetch user directly or assure safety
                 .map(notificationMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public NotificationDTO getNotificationById(Long id) {
+        return notificationRepository.findById(id)
+                .map(notificationMapper::toDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Notification not found: " + id));
     }
 
     @Override
@@ -85,7 +90,7 @@ public class INotificationServiceImpl implements INotificationService {
         List<Notification> unread = notificationRepository.findByUserId(userId).stream()
                 .filter(n -> !n.isRead())
                 .collect(Collectors.toList());
-                
+
         unread.forEach(n -> n.setRead(true));
         notificationRepository.saveAll(unread);
     }

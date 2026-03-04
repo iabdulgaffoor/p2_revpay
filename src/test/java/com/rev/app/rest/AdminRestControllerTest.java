@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.rev.app.dto.UserDTO;
 import com.rev.app.dto.WalletDTO;
-import com.rev.app.mapper.UserMapper;
 import com.rev.app.repository.ITransactionRepository;
 import com.rev.app.repository.IUserRepository;
 import com.rev.app.service.ILoanApplicationService;
@@ -28,7 +26,6 @@ class AdminRestControllerTest {
 
     private IUserRepository userRepository;
     private ITransactionRepository transactionRepository;
-    private UserMapper userMapper;
     private IWalletService walletService;
     private ILoanApplicationService loanService;
     private IUserService userService;
@@ -38,11 +35,11 @@ class AdminRestControllerTest {
     void setUp() {
         userRepository = mock(IUserRepository.class);
         transactionRepository = mock(ITransactionRepository.class);
-        userMapper = mock(UserMapper.class);
         walletService = mock(IWalletService.class);
         loanService = mock(ILoanApplicationService.class);
         userService = mock(IUserService.class);
-        adminRestController = new AdminRestController(userRepository, transactionRepository, userMapper, walletService, loanService, userService);
+        adminRestController = new AdminRestController(userRepository, transactionRepository, walletService, loanService,
+                userService);
     }
 
     @Test
@@ -60,10 +57,12 @@ class AdminRestControllerTest {
 
     @Test
     void getAllUsersPaginated_Success() {
-        org.springframework.data.domain.Page<UserDTO> emptyPage = new org.springframework.data.domain.PageImpl<>(java.util.Collections.emptyList());
+        org.springframework.data.domain.Page<UserDTO> emptyPage = new org.springframework.data.domain.PageImpl<>(
+                java.util.Collections.emptyList());
         when(userService.getAllUsersPaginated(0, 10, "id", "asc", "")).thenReturn(emptyPage);
 
-        ResponseEntity<org.springframework.data.domain.Page<UserDTO>> response = adminRestController.getAllUsersPaginated(0, 10, "id", "asc", "");
+        ResponseEntity<org.springframework.data.domain.Page<UserDTO>> response = adminRestController
+                .getAllUsersPaginated(0, 10, "id", "asc", "");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(0, response.getBody().getContent().size());

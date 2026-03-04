@@ -23,7 +23,7 @@
                     Credit Requisition Protocol</div>
                 <form id="loanForm" onsubmit="event.preventDefault(); applyForLoan();">
                     <div class="form-group">
-                        <label>Principal Credit Amount (USD)</label>
+                        <label>Principal Credit Amount (INR)</label>
                         <input type="number" id="loanAmount" min="1000" step="100"
                             placeholder="Minimum disbursement: 1,000.00" required>
                     </div>
@@ -75,7 +75,7 @@
                         Projections based on current benchmark APR of 9.5%.</p>
                     <form id="simulateForm" onsubmit="event.preventDefault(); simulateLoan();">
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="font-size: 0.75rem;">Principal Benchmark (USD)</label>
+                            <label style="font-size: 0.75rem;">Principal Benchmark (INR)</label>
                             <input type="number" id="simAmount" value="10000" required style="padding: 10px;">
                         </div>
                         <div class="form-group" style="margin-bottom: 24px;">
@@ -126,3 +126,4 @@
 </body>
 
 </html>
+

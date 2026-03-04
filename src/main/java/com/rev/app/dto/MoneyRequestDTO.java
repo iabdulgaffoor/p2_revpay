@@ -16,22 +16,23 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MoneyRequestDTO {
     private Long id;
-    
+
     @NotNull(message = "Requester ID is required")
     private Long requesterId;
     private String requesterName;
-    
+
     @NotNull(message = "Requestee ID is required")
     private Long requesteeId;
     private String requesteeName;
-    
+
     @NotNull(message = "Amount is required")
     @DecimalMin(value = "0.01", message = "Amount must be greater than zero")
     private BigDecimal amount;
-    
+
     @NotBlank(message = "Purpose is required")
     private String purpose;
-    
+
     private RequestStatus status;
     private LocalDateTime createdAt;
+    private Long invoiceId;
 }

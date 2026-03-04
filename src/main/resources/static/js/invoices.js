@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', loadInvoices);
                                         <div style="font-size: 0.75rem; color: var(--text-muted);">${inv.customerEmail}</div>
                                     </td>
                                     <td style="padding: 20px 24px; color: var(--text-secondary); font-size: 0.875rem;">${inv.dueDate}</td>
-                                    <td style="padding: 20px 24px; font-weight: 700; color: var(--primary-color); font-size: 0.9375rem;">USD ${inv.totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                    <td style="padding: 20px 24px; font-weight: 700; color: var(--primary-color); font-size: 0.9375rem;">INR ${inv.totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                     <td style="padding: 20px 24px;"><span class="status-badge ${statusCls}" style="font-size: 0.6875rem; padding: 4px 10px;">${inv.status}</span></td>
                                     <td style="padding: 20px 24px; text-align: right;">${actionHtml}</td>
                                 </tr>
@@ -89,3 +89,4 @@ document.addEventListener('DOMContentLoaded', loadInvoices);
             } catch (e) { console.error(e); }
             finally { setButtonLoading(btn, false); }
         }
+

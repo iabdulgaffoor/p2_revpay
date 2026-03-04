@@ -14,21 +14,18 @@ import org.springframework.http.ResponseEntity;
 
 import com.rev.app.service.IInvoiceService;
 import com.rev.app.service.ITransactionService;
-import com.rev.app.service.IUserService;
 
 class BusinessAnalyticsRestControllerTest {
 
     private ITransactionService transactionService;
     private IInvoiceService invoiceService;
-    private IUserService userService;
     private BusinessAnalyticsRestController businessAnalyticsRestController;
 
     @BeforeEach
     void setUp() {
         transactionService = mock(ITransactionService.class);
         invoiceService = mock(IInvoiceService.class);
-        userService = mock(IUserService.class);
-        businessAnalyticsRestController = new BusinessAnalyticsRestController(transactionService, invoiceService, userService);
+        businessAnalyticsRestController = new BusinessAnalyticsRestController(transactionService, invoiceService);
     }
 
     @Test

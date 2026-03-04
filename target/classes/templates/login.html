@@ -8,100 +8,69 @@
 <body>
     <div th:replace="~{fragments/layout :: headerFragment}"></div>
 
-    <div class="main-content" style="max-width: 480px; margin: 40px auto;">
-        <div class="card">
-            <h1 style="font-weight: 700; font-size: 1.5rem; margin-bottom: 8px; text-align: center;">Account Login</h1>
-            <p style="color: var(--text-muted); text-align: center; font-size: 0.875rem; margin-bottom: 32px;">Access
-                your RevPay financial dashboard</p>
-
-            <!-- Login Form -->
-            <form id="loginForm" onsubmit="event.preventDefault(); submitLogin();">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="name@company.com" required>
+    <main class="main-content">
+        <div class="auth-shell">
+            <section class="auth-panel">
+                <div>
+                    <h2>Secure Access Portal</h2>
+                    <p>Sign in to manage transactions, wallet controls, requests, notifications, and business operations.</p>
                 </div>
+                <p style="opacity: 0.8; font-size: 0.82rem; margin: 0;">Session security includes credential validation and account recovery controls.</p>
+            </section>
 
-                <div class="form-group">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <label for="password" style="margin-bottom: 0;">Password</label>
-                        <a href="#" onclick="showForgotPasswordForm()"
-                            style="font-size: 0.75rem; font-weight: 600; color: var(--accent-color); text-decoration: none;">Forgot
-                            Password?</a>
+            <section class="auth-card">
+                <h1 class="page-title" style="font-size: 1.55rem;">Account Login</h1>
+                <p class="page-subtitle" style="margin-bottom: 1.2rem;">Use your registered credentials to continue.</p>
+
+                <form id="loginForm" onsubmit="event.preventDefault(); submitLogin();">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="name@company.com" required>
                     </div>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <label for="password" style="margin: 0;">Password</label>
+                            <a href="#" onclick="showForgotPasswordForm()" style="font-size: 0.78rem; color: var(--accent-hover); text-decoration: none;">Forgot Password?</a>
+                        </div>
+                        <input type="password" id="password" name="password" placeholder="Enter password" required>
+                    </div>
+
+                    <div id="errorMessage" class="error" style="display:none;"></div>
+                    <button type="submit" class="btn" style="width: 100%;">Sign In</button>
+                </form>
+
+                <form id="forgotPasswordForm" onsubmit="event.preventDefault(); submitForgotPassword();" style="display:none;">
+                    <h3 style="margin: 0 0 6px; font-size: 1.06rem;">Reset Password</h3>
+                    <p class="page-subtitle" style="margin-bottom: 1rem;">Enter your email to continue with password reset.</p>
+                    <div class="form-group">
+                        <label for="resetEmail">Email Address</label>
+                        <input type="email" id="resetEmail" name="resetEmail" placeholder="name@company.com" required>
+                    </div>
+                    <div id="forgotErrorMessage" class="error" style="display:none;"></div>
+                    <button type="submit" class="btn" style="width: 100%;">Send Reset Code</button>
+                    <div style="text-align: center; margin-top: 14px;">
+                        <a href="#" onclick="showLoginForm()" style="font-size: 0.84rem; color: var(--text-muted); text-decoration: none;">Back to Sign In</a>
+                    </div>
+                </form>
+
+                <form id="resetPasswordForm" onsubmit="event.preventDefault(); submitResetPassword();" style="display:none;">
+                    <h3 style="margin: 0 0 6px; font-size: 1.06rem;">Create New Password</h3>
+                    <p class="page-subtitle" style="margin-bottom: 1rem;">Set a new password for your account.</p>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" placeholder="New password" required>
+                    </div>
+                    <div id="resetErrorMessage" class="error" style="display:none;"></div>
+                    <button type="submit" class="btn" style="width: 100%;">Update Password</button>
+                </form>
+
+                <div id="registerText" class="auth-links">
+                    New to RevPay? <a th:href="@{/register}">Create an account</a>
                 </div>
-
-                <div id="errorMessage" class="error" style="display:none;"></div>
-
-                <button type="submit" class="btn" style="width: 100%; margin-top: 8px;">Sign In</button>
-            </form>
-
-            <form id="otpForm" onsubmit="event.preventDefault(); submitOtp();" style="display:none;">
-                <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 8px;">Verify Identity</h3>
-                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Please enter the security
-                    code sent to your email.</p>
-                <div class="form-group">
-                    <label for="otp">Security Code (OTP)</label>
-                    <input type="text" id="otp" name="otp" placeholder="000000" required>
-                </div>
-
-                <div id="otpErrorMessage" class="error" style="display:none;"></div>
-
-                <button type="submit" class="btn" style="width: 100%;">Verify and Continue</button>
-
-                <div style="text-align: center; margin-top: 24px;">
-                    <a href="#" onclick="resendOtp()"
-                        style="font-size: 0.875rem; font-weight: 600; color: var(--accent-color); text-decoration: none;">Resend
-                        original code</a>
-                </div>
-            </form>
-
-            <form id="forgotPasswordForm" onsubmit="event.preventDefault(); submitForgotPassword();"
-                style="display:none;">
-                <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 8px;">Reset Password</h3>
-                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Enter your email to
-                    receive instructions to reset your password.</p>
-                <div class="form-group">
-                    <label for="resetEmail">Email Address</label>
-                    <input type="email" id="resetEmail" name="resetEmail" placeholder="name@company.com" required>
-                </div>
-                <div id="forgotErrorMessage" class="error" style="display:none;"></div>
-                <button type="submit" class="btn" style="width: 100%;">Send Reset Code</button>
-                <div style="text-align: center; margin-top: 24px;">
-                    <a href="#" onclick="showLoginForm()"
-                        style="font-size: 0.875rem; font-weight: 600; color: var(--text-muted); text-decoration: none;">Return
-                        to Sign In</a>
-                </div>
-            </form>
-
-            <form id="resetPasswordForm" onsubmit="event.preventDefault(); submitResetPassword();"
-                style="display:none;">
-                <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 8px;">Set New Password</h3>
-                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 24px;">Create a secure password
-                    for your account.</p>
-                <div class="form-group">
-                    <label for="resetOtp">Security Code</label>
-                    <input type="text" id="resetOtp" name="resetOtp" placeholder="000000" required>
-                </div>
-                <div class="form-group">
-                    <label for="newPassword">New Password</label>
-                    <input type="password" id="newPassword" name="newPassword" placeholder="••••••••" required>
-                </div>
-                <div id="resetErrorMessage" class="error" style="display:none;"></div>
-                <button type="submit" class="btn" style="width: 100%;">Update Password</button>
-            </form>
-
-            <div id="registerText"
-                style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-color);">
-                <p style="font-size: 0.875rem; color: var(--text-secondary);">
-                    New to RevPay? <a th:href="@{/register}"
-                        style="font-weight: 600; color: var(--accent-color); text-decoration: none;">Create an
-                        account</a>.
-                </p>
-            </div>
+            </section>
         </div>
-    </div>
+    </main>
 
     <div th:replace="~{fragments/layout :: footerFragment}"></div>
 

@@ -13,6 +13,11 @@ public class HomeController {
         return "index"; // Assuming index.html Thymeleaf template
     }
 
+    @GetMapping("/requests")
+    public String redirectToRequests() {
+        return "redirect:/transaction/requests";
+    }
+
     @GetMapping("/login")
     public String showLoginPage() {
         return "login";

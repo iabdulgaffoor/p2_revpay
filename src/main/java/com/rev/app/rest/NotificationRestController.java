@@ -22,10 +22,15 @@ public class NotificationRestController {
     }
 
     @PostMapping("/user/{userId}")
-    public ResponseEntity<NotificationDTO> createNotification(@PathVariable Long userId, 
-                                                              @RequestParam String message, 
-                                                              @RequestParam NotificationType type) {
+    public ResponseEntity<NotificationDTO> createNotification(@PathVariable Long userId,
+            @RequestParam String message,
+            @RequestParam NotificationType type) {
         return new ResponseEntity<>(notificationService.createNotification(userId, message, type), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<NotificationDTO> getNotificationById(@PathVariable Long id) {
+        return ResponseEntity.ok(notificationService.getNotificationById(id));
     }
 
     @GetMapping("/user/{userId}")

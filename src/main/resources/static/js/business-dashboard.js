@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (res.ok) {
                     const data = await res.json();
 
-                    document.getElementById('valTotalReceived').innerText = `USD ${(data.totalReceived || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-                    document.getElementById('valTotalSent').innerText = `USD ${(data.totalSent || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-                    document.getElementById('valOutstanding').innerText = `USD ${(data.outstandingInvoiceAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+                    document.getElementById('valTotalReceived').innerText = `INR ${(data.totalReceived || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+                    document.getElementById('valTotalSent').innerText = `INR ${(data.totalSent || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+                    document.getElementById('valOutstanding').innerText = `INR ${(data.outstandingInvoiceAmount || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
                     document.getElementById('valPendingCount').innerText = data.pendingInvoicesCount || 0;
 
                     loader.style.display = 'none';
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         y: {
                             beginAtZero: true,
                             grid: { borderDash: [5, 5], color: '#e2e8f0' },
-                            ticks: { callback: value => 'USD ' + value.toLocaleString() }
+                            ticks: { callback: value => 'INR ' + value.toLocaleString() }
                         },
                         x: { grid: { display: false } }
                     }
@@ -92,3 +92,4 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
         }
+

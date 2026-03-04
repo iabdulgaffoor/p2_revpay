@@ -20,15 +20,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         const walletRes = await fetchWithAuth(`/api/wallets/user/${userId}`);
         if (walletRes.ok) {
             const wallet = await walletRes.json();
-            document.getElementById('walletBalance').innerText = `USD ${wallet.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('walletBalance').innerText = `INR ${wallet.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         }
 
         if (user && user.role === 'BUSINESS') {
             const analyticsRes = await fetchWithAuth(`/api/analytics/business/${userId}/summary`);
             if (analyticsRes.ok) {
                 const data = await analyticsRes.json();
-                document.getElementById('totalReceived').innerText = `USD ${(data.totalReceived || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-                document.getElementById('totalSent').innerText = `USD ${(data.totalSent || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+                document.getElementById('totalReceived').innerText = `INR ${(data.totalReceived || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+                document.getElementById('totalSent').innerText = `INR ${(data.totalSent || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
             }
         }
 
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <tr style="border-bottom: 1px solid var(--border-color);">
                             <td style="padding: 16px 24px; font-size: 0.875rem; color: var(--text-secondary);">${dateStr}</td>
                             <td style="padding: 16px 24px;"><span class="status-badge status-neutral" style="font-size: 0.625rem; text-transform: uppercase;">${t.type.replace('_', ' ')}</span></td>
-                            <td style="padding: 16px 24px; font-weight: 700; color: ${amountColor}; font-size: 0.875rem;">${amountPrefix}USD ${t.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                            <td style="padding: 16px 24px; font-weight: 700; color: ${amountColor}; font-size: 0.875rem;">${amountPrefix}INR ${t.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                             <td style="padding: 16px 24px; font-size: 0.875rem; color: var(--primary-color); font-weight: 500;">${counterparty}</td>
                             <td style="padding: 16px 24px;"><span class="status-badge ${statusClass}" style="font-size: 0.625rem;">${t.status}</span></td>
                         </tr>`;
@@ -86,3 +86,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error("Dashboard registry failure:", err);
     }
 });
+
+

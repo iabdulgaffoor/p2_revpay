@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.rev.app.dto.DocumentDTO;
 import com.rev.app.entity.Document;
 import com.rev.app.entity.User;
-import com.rev.app.exception.ResourceNotFoundException;
 import com.rev.app.repository.IDocumentRepository;
 import com.rev.app.repository.IUserRepository;
 

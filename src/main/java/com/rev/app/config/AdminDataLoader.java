@@ -33,8 +33,6 @@ public class AdminDataLoader implements CommandLineRunner {
             admin.setRole(Role.ADMIN);
             admin.setSecurityQuestion("Admin Key?");
             admin.setSecurityAnswer("admin");
-            admin.setTransactionAlerts(true);
-            admin.setSecurityAlerts(true);
 
             userRepository.save(admin);
             log.info("Default Admin user created successfully (shaikgaffoorbhai@gmail.com / Shaik_Gaffoor@2819)");

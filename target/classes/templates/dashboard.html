@@ -2,132 +2,78 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <div th:replace="~{fragments/layout :: headFragment('Identity Registry Dashboard | RevPay')}"></div>
+    <div th:replace="~{fragments/layout :: headFragment('Dashboard | RevPay')}"></div>
 </head>
 
 <body>
     <div th:replace="~{fragments/layout :: headerFragment}"></div>
 
-    <div class="main-content" id="appMainContent" style="display:none;">
-        <div style="margin-bottom: 32px;">
-            <h1 style="font-weight: 600; font-size: 1.8rem; margin: 0;">
-                <span id="welcomeMsg">Registry Session</span>
-                <span id="roleBadge" class="status-badge status-info"
-                    style="display:none; font-size: 0.625rem; vertical-align: middle; margin-left: 12px; padding: 4px 8px;"></span>
+    <main class="main-content" id="appMainContent" style="display:none;">
+        <section style="margin-bottom: 1rem;">
+            <h1 class="page-title">
+                <span id="welcomeMsg">Welcome</span>
+                <span id="roleBadge" class="status-badge status-info" style="display:none; margin-left: 8px;"></span>
             </h1>
-            <p style="color: var(--text-muted); font-size: 0.875rem;">Account synchronization and liquidity overview.
-            </p>
-        </div>
+            <p class="page-subtitle">Financial overview and account operations in one place.</p>
+        </section>
 
-        <!-- Wallet Balance Card -->
-        <div class="enterprise-balance-card">
-            <div style="display:none;">
+        <section class="enterprise-balance-card">
+            <div class="balance-label">Available Balance</div>
+            <p class="balance-amount" id="walletBalance">INR 0.00</p>
+            <div class="balance-actions">
+                <button onclick="window.location.href='/wallet'" class="btn btn-secondary">Manage Wallet</button>
+                <button onclick="window.location.href='/transaction/send'" class="btn btn-outline">Send Money</button>
+                <button onclick="window.location.href='/transaction/requests'" class="btn btn-outline">Requests</button>
+            </div>
+        </section>
+
+        <section class="kpi-grid">
+            <article class="kpi-card">
+                <div class="kpi-label">Pending Requests</div>
+                <div class="kpi-value" id="pendingRequestsCount">0</div>
+                <div class="kpi-note">Waiting for action</div>
+            </article>
+            <article class="kpi-card">
+                <div class="kpi-label">Unread Notifications</div>
+                <div class="kpi-value" id="notificationCount">0</div>
+                <div class="kpi-note">Recent account alerts</div>
+            </article>
+            <article class="kpi-card business-only" style="display:none;">
+                <div class="kpi-label">Total Inflow</div>
+                <div class="kpi-value text-success" id="totalReceived">INR 0.00</div>
+                <div class="kpi-note">Business collections</div>
+            </article>
+            <article class="kpi-card business-only" style="display:none;">
+                <div class="kpi-label">Total Outflow</div>
+                <div class="kpi-value" id="totalSent">INR 0.00</div>
+                <div class="kpi-note">Business disbursements</div>
+            </article>
+        </section>
+
+        <section class="card" style="padding: 0; overflow: hidden;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.2rem; border-bottom: 1px solid var(--border-color);">
+                <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem;">Recent Transactions</h3>
+                <a th:href="@{/transaction/history}" style="text-decoration: none; color: var(--accent-hover); font-size: 0.8rem; font-weight: 700;">View Full History</a>
             </div>
 
-            <div
-                style="font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; margin-bottom: 12px;">
-                Primary Liquid Assets</div>
-            <div style="font-size: 3rem; font-weight: 700; margin-bottom: 32px; letter-spacing: -0.02em;"
-                id="walletBalance">USD 0.00</div>
-
-            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-                <button onclick="window.location.href='/wallet'" class="btn"
-                    style="background: white; color: var(--primary-color); padding: 10px 24px; font-size: 0.875rem;">Manage
-                    Liquidity</button>
-                <button onclick="window.location.href='/transaction/send'" class="btn"
-                    style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px 24px; font-size: 0.875rem;">Initialize
-                    Disbursement</button>
-                <button onclick="window.location.href='/transaction/requests'" class="btn"
-                    style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px 24px; font-size: 0.875rem;">Solicit
-                    Funds</button>
-            </div>
-        </div>
-
-        <!-- KPI Widgets -->
-        <div
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 40px;">
-            <div class="card" style="padding: 24px; border: 1px solid var(--border-color); box-shadow: none;">
-                <div
-                    style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
-                    Pending Solicitations</div>
-                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);" id="pendingRequestsCount">0
-                </div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Awaiting authorization</div>
-            </div>
-            <div class="card" style="padding: 24px; border: 1px solid var(--border-color); box-shadow: none;">
-                <div
-                    style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
-                    System Dispatches</div>
-                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color);" id="notificationCount">0
-                </div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Unread communications</div>
+            <div id="noTransactions" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                No transactions available yet.
             </div>
 
-            <div id="businessKpis" style="display: contents;">
-                <div class="card business-only"
-                    style="display: none; padding: 24px; border: 1px solid var(--border-color); box-shadow: none;">
-                    <div
-                        style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
-                        Aggregate Inflow</div>
-                    <div style="font-size: 2rem; font-weight: 700; color: var(--success);" id="totalReceived">USD 0.00
-                    </div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Registry verified</div>
-                </div>
-                <div class="card business-only"
-                    style="display: none; padding: 24px; border: 1px solid var(--border-color); box-shadow: none;">
-                    <div
-                        style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
-                        Aggregate Outflow</div>
-                    <div style="font-size: 2rem; font-weight: 700; color: var(--text-secondary);" id="totalSent">USD
-                        0.00</div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">Total disbursements
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Transactions -->
-        <div class="card"
-            style="padding: 0; overflow: hidden; border: 1px solid var(--border-color); box-shadow: none;">
-            <div
-                style="padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color);">
-                <h3 style="margin: 0; color: var(--primary-color); font-size: 1rem; font-weight: 700;">Recent Ledger
-                    Activities</h3>
-                <a th:href="@{/transaction/history}"
-                    style="color: var(--accent-color); text-decoration: none; font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Access
-                    Full Archive</a>
-            </div>
-
-            <div id="noTransactions" style="text-align: center; padding: 60px; color: var(--text-muted);">
-                <div style="font-size: 0.875rem;">No transaction activities discovered in registry.</div>
-            </div>
-
-            <table id="transactionsTable" style="display:none; width: 100%; border-collapse: collapse;">
+            <table id="transactionsTable" style="display:none; width: 100%;">
                 <thead>
-                    <tr style="background: var(--bg-color);">
-                        <th
-                            style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
-                            Filing Date</th>
-                        <th
-                            style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
-                            protocol</th>
-                        <th
-                            style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
-                            Amount</th>
-                        <th
-                            style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
-                            Counterparty</th>
-                        <th
-                            style="padding: 16px 24px; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
-                            Status</th>
+                    <tr>
+                        <th style="padding: 0.8rem 1.2rem;">Date</th>
+                        <th style="padding: 0.8rem 1.2rem;">Type</th>
+                        <th style="padding: 0.8rem 1.2rem;">Amount</th>
+                        <th style="padding: 0.8rem 1.2rem;">Counterparty</th>
+                        <th style="padding: 0.8rem 1.2rem;">Status</th>
                     </tr>
                 </thead>
-                <tbody id="transactionList">
-                    <!-- Populated by JS -->
-                </tbody>
+                <tbody id="transactionList"></tbody>
             </table>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <div th:replace="~{fragments/layout :: footerFragment}"></div>
 
@@ -135,3 +81,5 @@
 </body>
 
 </html>
+
+

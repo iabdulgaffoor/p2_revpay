@@ -46,8 +46,19 @@ public class TransactionMapper {
         transaction.setTimestamp(dto.getTimestamp());
         transaction.setNote(dto.getNote());
 
-        // Note: User objects (Sender/Recipient) must be explicitly set by the Service layer
+        // Note: User objects (Sender/Recipient) must be explicitly set by the Service
+        // layer
 
         return transaction;
+    }
+
+    public com.rev.app.entity.Wallet toWalletEntity(com.rev.app.dto.WalletDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        com.rev.app.entity.Wallet wallet = new com.rev.app.entity.Wallet();
+        wallet.setId(dto.getId());
+        wallet.setBalance(dto.getBalance());
+        return wallet;
     }
 }
